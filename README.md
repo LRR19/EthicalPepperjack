@@ -3,6 +3,7 @@ Hello everyone! My name is Ryan and I’ll be one of the CS361 TA’s for this t
 So as a client, I’m looking for an app that allows me to enter my favorite meal or ingredients for a meal and transform it to be more ethical. “Ethical” is up to interpretation but could include considerations such as environmental impact, animal welfare, workers’ rights, problematic corporate ties and more. The specific considerations that are included in the app are up to you as a group. I just want to be a better person, you know?
 
 The five features that I’m looking for with this app are:
+
     Users can enter common meals and see the typical ingredients involved in the recipe.
     Users can also choose to enter individual ingredients to build their own recipe.
     From there, users should be able to see information on possible problems with each ingredient and choose more ethical alternatives.
