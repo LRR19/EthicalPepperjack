@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content  %}
+<h1>Recipe Book</h1>
+    <h3></h3>
+
+<table border="1px solid black">
+    <tr>
+        <th>Recipe Name</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td>Bark</td>
+        <td>2</td>
+        <td>small</td>
+        <td><a href="vaccines">Vaccines</a></td>
+<td>
+            <a href="/vaccines/update"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+            <a href="/vaccines/delete"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+        </td>    </tr>
+<tr>
+        <td>Bone</td>
+        <td>0</td>
+        <td>big</td>
+    <td><a href="vaccines">Vaccines</a></td>
+<td>
+            <a href="/vaccines/update"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+            <a href="/vaccines/delete"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+        </td>
+</tr>
+</table>
+    <a href="/owner/add_dogs"><button type="button" class="btn btn-primary">Add Dog</button></a>
+
+{% endblock %}
