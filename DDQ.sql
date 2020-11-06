@@ -155,7 +155,8 @@ VALUES
 ('sugar','sweet','GA',''),
 ('flour','for baking','GA',''),
 ('halibut','fish','CA',''),
-('potato','starchy veggie','ID','');
+('potato','starchy veggie','ID',''),
+('tuna','fish','WA','');
 
 --
 -- Dumping data for table `recipes`
