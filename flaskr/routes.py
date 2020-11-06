@@ -1,4 +1,4 @@
-from flaskr import app
+from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
 
 
