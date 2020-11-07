@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>{{ name }}</h1>
+    <form>
+        <div class="col-xs-4">
+            <label for="exampleInputEmail1">Search Category</label>
+            <input type="search" class="form-control" id="search-field"
+                   aria-describedby="searchHelp">
+            <small id="searchHelp" class="form-text text-muted">Search for
+                an ethical problem category.
+            </small>
+        </div>
+    </form>
+    <br>
+    <input class="btn btn-primary" type="submit" value="Submit">
+
+{% endblock %}
+

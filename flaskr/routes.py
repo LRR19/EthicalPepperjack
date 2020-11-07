@@ -13,6 +13,13 @@ def index():
     return render_template('base.html', title='test')
 
 
+@app.route('/search_category')
+def search_category():
+
+    return render_template('search_category.html')
+
+
+
 ##This will be all of the routes for the recipe book function. There will be a Get to get the current users recipe
 ##book. Delete will remove a recipe.
 
