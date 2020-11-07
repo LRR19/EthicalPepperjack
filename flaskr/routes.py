@@ -40,7 +40,9 @@ def search_for_recipe():
 #   Pass the search query and the list of ingredients to the new html for display.
     return render_template('recipe_display.html', name=recipe_name, ingredients=ingredient_list)
 
-
+@app.route('/foo')
+def foo():
+    return render_template('dropdown.html')
 
     
 

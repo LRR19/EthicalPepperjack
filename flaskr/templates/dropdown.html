@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content  %}
+
+<h1>Test</h1>
+
+<p>drop-down list:</p>
+
+<form action="/action_page.php">
+  <label for="ingredient">Choose ingredient:</label>
+  <select name="ingredient" id="ingredient">
+    <optgroup label="XXXXX">
+      <option >some food</option>
+      <option >some food</option>
+    </optgroup>
+    <optgroup label="XXXXXXX">
+      <option >some food</option>
+      <option >some food</option>
+    </optgroup>
+  </select>
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
