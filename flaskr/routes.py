@@ -42,7 +42,7 @@ def search_for_recipe():
 
 @app.route('/foo')
 def foo():
-    return render_template('dropdown.html')
+    return render_template('alternative_display.html')
 
     
 
