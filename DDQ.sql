@@ -139,6 +139,45 @@ CREATE TABLE ingredients_concerns(
 	ON UPDATE CASCADE  
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE users(
+	id int(11) NOT NULL AUTO_INCREMENT,
+	username varchar(255) NOT NULL,
+	f_name varchar(255) NOT NULL,
+	l_name varchar(255) NOT NULL,
+	PRIMARY KEY (id)  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `users_recipes`
+--
+
+DROP TABLE IF EXISTS `users_recipes`;
+CREATE TABLE users_recipes(
+	user_id int,
+	recipe_id int,
+	PRIMARY KEY (user_id,recipe_id),
+	CONSTRAINT FK_User FOREIGN KEY(user_id)
+	REFERENCES users(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT FK_Recipe_U FOREIGN KEY(recipe_id)
+	REFERENCES recipes(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+
+
+
 --
 -- Dumping data for table `ingredients`
 --
