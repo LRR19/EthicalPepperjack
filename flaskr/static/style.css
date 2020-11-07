@@ -1,6 +1,55 @@
+/*Font for navigation bar*/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
 *{
 	box-sizing: border-box;
 	font-family:calibri,verdana,arial;
 	line-height: 1.5;
 	margin: 0 auto;
+}
+
+li, a {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 450;
+	font-size: 13px;
+	color: grey;
+	text-decoration: none;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: grey;
+	padding-top: 10px;
+	overflow: auto;
+}
+
+h1 {
+	display: inline-block;
+	float: left;
+	margin-left: 20px;
+}
+
+ul {
+	display: inline-block;
+	float: right;
+	margin-right: 10%;
+}
+
+.navlinks {
+	list-style: none;
+}
+
+.navlinks li {
+	display: inline-block;
+	padding: 18px 25px;
+}
+
+.navlinks li a {
+	transition: all 0.2s ease 0s;
+}
+
+.navlinks li a:hover {
+	color: green;
 }
