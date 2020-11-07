@@ -11,8 +11,7 @@
 li, a {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 450;
-	font-size: 13px;
-	color: grey;
+	font-size: 16px;
 	text-decoration: none;
 }
 
@@ -20,21 +19,21 @@ header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: grey;
+	background-color: #484863;
 	padding-top: 10px;
 	overflow: auto;
 }
 
-h1 {
+.title {
 	display: inline-block;
 	float: left;
-	margin-left: 20px;
+	margin-left: 30px;
 }
 
 ul {
 	display: inline-block;
 	float: right;
-	margin-right: 10%;
+	margin-right: 7%;
 }
 
 .navlinks {
@@ -43,13 +42,14 @@ ul {
 
 .navlinks li {
 	display: inline-block;
-	padding: 18px 25px;
+	padding: 18px 35px;
 }
 
 .navlinks li a {
 	transition: all 0.2s ease 0s;
+	color: white;
 }
 
 .navlinks li a:hover {
-	color: green;
+	color: grey;
 }

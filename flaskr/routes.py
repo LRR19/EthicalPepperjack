@@ -10,7 +10,7 @@ from .db_connect import *
 @app.route('/')
 def index():
 
-    return render_template('base.html', title='test')
+    return render_template('login.html')
 
 
 ##This will be all of the routes for the recipe book function. There will be a Get to get the current users recipe
