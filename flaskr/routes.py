@@ -1,11 +1,7 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
-#from flask_mysqldb import MySQL
+
 from .db_connect import *
-
-
-#mysql = MySQL(app)
-
 
 # Route to the login page
 @app.route('/')

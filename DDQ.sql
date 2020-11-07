@@ -139,6 +139,45 @@ CREATE TABLE ingredients_concerns(
 	ON UPDATE CASCADE  
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE users(
+	id int(11) NOT NULL AUTO_INCREMENT,
+	username varchar(255) NOT NULL,
+	f_name varchar(255) NOT NULL,
+	l_name varchar(255) NOT NULL,
+	PRIMARY KEY (id)  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `users_recipes`
+--
+
+DROP TABLE IF EXISTS `users_recipes`;
+CREATE TABLE users_recipes(
+	user_id int,
+	recipe_id int,
+	PRIMARY KEY (user_id,recipe_id),
+	CONSTRAINT FK_User FOREIGN KEY(user_id)
+	REFERENCES users(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT FK_Recipe_U FOREIGN KEY(recipe_id)
+	REFERENCES recipes(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+
+
+
 --
 -- Dumping data for table `ingredients`
 --
@@ -183,3 +222,17 @@ VALUES
 
 
 SET FOREIGN_KEY_CHECKS=1;
+
+--
+-- Dumping data for table `ingredients`
+--
+
+INSERT INTO ethical_categories
+(name,description)
+VALUES
+('meat','killing animals is not good'),
+('water usage','we only have so much'),
+('pollution','if you can\'t breathe it doesn\'t matter what you eat')
+('carbon footprint','think about the polar bears')
+('pesticides','bees are friends')
+('food miles','local is better');
