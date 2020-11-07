@@ -1,24 +1,93 @@
 {% extends 'base.html' %}
 {% block content  %}
 
-<h1>Test</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
 
-<p>drop-down list:</p>
+.active, .accordion:hover {
+  background-color: #ccc;
+}
 
-<form action="/action_page.php">
-  <label for="ingredient">Choose ingredient:</label>
-  <select name="ingredient" id="ingredient">
-    <optgroup label="XXXXX">
-      <option >some food</option>
-      <option >some food</option>
-    </optgroup>
-    <optgroup label="XXXXXXX">
-      <option >some food</option>
-      <option >some food</option>
-    </optgroup>
-  </select>
-  <br><br>
-  <input type="submit" value="Submit">
-</form>
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center">Recipe</h2>
+<p style="text-align:center">Click on Ingredients of Recipe to see Ethical Alternatives.</p>
+
+<button class="accordion">Ingredient 1</button>
+<div class="panel">
+  <p>
+    <ul>
+      <li>Ethical Alternative 1</li>
+      <li>Ethical Alternative 2</li>
+      <li>Ethical Alternative 3</li>
+    </ul>
+  </p>
+</div>
+
+<button class="accordion">Ingredient 2</button>
+<div class="panel">
+  <p>
+    <ul>
+      <li>Ethical Alternative 1</li>
+      <li>Ethical Alternative 2</li>
+      <li>Ethical Alternative 3</li>
+    </ul>
+  </p>
+</div>
+
+<button class="accordion">Ingredient 3</button>
+<div class="panel">
+  <p>
+    <ul>
+      <li>Ethical Alternative 1</li>
+      <li>Ethical Alternative 2</li>
+      <li>Ethical Alternative 3</li>
+    </ul>
+  </p>
+</div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+
+</body>
+</html>
 
 {% endblock %}
