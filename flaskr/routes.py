@@ -3,12 +3,16 @@ from flask import render_template, request, redirect, jsonify, url_for, flash, s
 
 from .db_connect import *
 
-
-
+# Route to the login page
 @app.route('/')
-def index():
+def login():
+    return render_template('login.html')
 
-    return render_template('base.html', title='test')
+
+# Route to the signup page
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 
 ##This will be all of the routes for the recipe book function. There will be a Get to get the current users recipe
@@ -25,24 +29,24 @@ def recipebook():
 def search_for_recipe():
 #   Get the recipe name  from the search bar
 #   recipe_name = request.args.get("recipe_name")
-    recipe_name = "tomato soup"#   
+    recipe_name = "tomato soup"#
 #   Find the associated recipe ID with the recipe name
-    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
+    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
     result = execute_query(id_query)
 #   Convert result tuple to integer
-    recipe_id = result[0][0]    
+    recipe_id = result[0][0]
     query = "SELECT ingredients.name, ingredients.description, ingredients.origin FROM ingredients\
     INNER JOIN recipes_ingredients ON ingredients.id = recipes_ingredients.ingredient_id\
     WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
-#   Convert result tuple to list and then just get the first element of the tuple      
-    ingredient_list = list(execute_query(query))        
+#   Convert result tuple to list and then just get the first element of the tuple
+    ingredient_list = list(execute_query(query))
 #    ingredient_list =[item for t in result for item in t]
 #   Pass the search query and the list of ingredients to the new html for display.
     return render_template('recipe_display.html', name=recipe_name, ingredients=ingredient_list)
 
 
 
-    
+
 
 # @app.route('/home', methods=['GET','POST'])
 # def home():
