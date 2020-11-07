@@ -25,13 +25,13 @@ def recipebook():
 def search_for_recipe():
 #   Get the recipe name  from the search bar
 #   recipe_name = request.args.get("recipe_name")
-    recipe_name = "tomato soup"#   
+    recipe_name = "tomato soup"   
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
     result = execute_query(id_query)
 #   Convert result tuple to integer
     recipe_id = result[0][0]    
-    query = "SELECT ingredients.name, ingredients.description, ingredients.origin FROM ingredients\
+    query = "SELECT ingredients.id, ingredients.name, ingredients.description, ingredients.origin FROM ingredients\
     INNER JOIN recipes_ingredients ON ingredients.id = recipes_ingredients.ingredient_id\
     WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
 #   Convert result tuple to list and then just get the first element of the tuple      
