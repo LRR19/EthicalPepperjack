@@ -7,10 +7,16 @@ from .db_connect import *
 #mysql = MySQL(app)
 
 
+# Route to the login page
 @app.route('/')
-def index():
-
+def login():
     return render_template('login.html')
+
+
+# Route to the signup page
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 
 ##This will be all of the routes for the recipe book function. There will be a Get to get the current users recipe
