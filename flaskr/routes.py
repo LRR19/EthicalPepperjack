@@ -1,7 +1,7 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
 
-from .db_connect import *
+from .db_connect import execute_query
 
 # Route to the login page
 @app.route('/')
