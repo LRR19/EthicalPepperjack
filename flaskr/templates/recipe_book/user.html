@@ -15,15 +15,12 @@
             <tr>
                 <th scope="row">{{recipe}}</td>
                 <td>
-                    <a href="/recipesearch">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-box-arrow-up-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
-                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
-                         </svg>
+                    <a href="/recipe_search?recipe_name={{recipe}}">
+                        <i class="fa fa-external-link fa-lg"></i>
                     </a>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#shareModal">Share</button>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#shareModal">Share <i class="fa fa-share-alt fa-lg"></i></button>
                     <div id="shareModal" class="modal fade" role="dialog"center="auto">
                         <div class="modal-dialog modal-dialog-centered">
                             <!--Modal content to with links to social media-->
@@ -33,7 +30,30 @@
                                     <button type="button" class="close" data-dismiss="modal" float="right">&times;</button>
                                 </div>
                                 <div class="modal-body">
-                                    <h1>DId this work at all</h1>                                    
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-twitter fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-instagram fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-facebook fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-link fa-lg"></i>
+                                                </span> 
+                                            </div>
+                                        </div>
+                                    </div>                                                               
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
