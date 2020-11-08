@@ -35,20 +35,23 @@
 </head>
 <body>
 
-<h2 style="text-align:center">Ethical Alternatives for {{ingredient}}</h2>
-<p style="text-align:center">Click on Ethical Alternatives for Info and to Switch.</p>
+<h2 style="text-align:center;">Ethical Alternatives for {{ingredient}}</h2>
 
 <div>
-<p>{{ingredient}} is unethical because it is {{unethical}}</p>
+<p style="text-align:center;">{{ingredient}} is unethical because it is {{unethical}}</p>
 </div>
 
+<p style="text-align:center;">Click on Ethical Alternatives for Info and to Switch.</p>
+
+
 {% for alternative in alternatives %}
-<button class="accordion">{{alternative}}</button>
+<button class="accordion">{{alternative.1}}</button>
 <div class="panel">
-  <p>It is more ethical because it is reason</p>
+  <p>It is more ethical because it is {{alternative.2}}.</p>
   <div style="text-align:center">  <input type="submit" value="Switch Ingredient"></div>
 </div>
 {% endfor %}
+
 
 
 <script>

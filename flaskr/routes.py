@@ -45,12 +45,8 @@ def foo():
     ingredient_name = "Milk"
 
     unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
-
-    alternative_list = [('soy milk'),('almond milk'),('cashew milk')]
-
-    #reason_list = [('less water intensive'), ('greenhouse emission friendly'), ('less water intensive')]
-    #for r in reason_list:
-
+    
+    alternative_list = [('0','soy milk', 'less water intensive'), ('1','almond milk', 'greenhouse emission friendly'), ('2', 'cashew milk', 'less water intensive')]
 
     return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
     
