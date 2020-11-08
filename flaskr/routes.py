@@ -87,7 +87,16 @@ def user_recipebook():
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
+@app.route('/foo')
+def foo():
+    ingredient_name = "Milk"
 
+    unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+    
+    alternative_list = [('0','soy milk', 'less water intensive'), ('1','almond milk', 'greenhouse emission friendly'), ('2', 'cashew milk', 'less water intensive')]
+
+    return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
+    
 
 
 # @app.route('/home', methods=['GET','POST'])
