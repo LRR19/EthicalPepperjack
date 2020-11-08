@@ -35,10 +35,10 @@
 </head>
 <body>
 
-<h2 style="text-align:center;">Ethical Alternatives for {{ingredient}}</h2>
+<h2 style="text-align:center;">Ethical Alternatives for {{ingredient.0}}</h2>
 
 <div>
-<p style="text-align:center;">{{ingredient}} is unethical because it is {{unethical}}</p>
+<p style="text-align:center;">{{ingredient.0}} is unethical because it is {{ingredient.1}}</p>
 </div>
 
 <p style="text-align:center;">Click on Ethical Alternatives for Info and to Switch.</p>
@@ -49,10 +49,9 @@
 <div class="panel">
   <p>It is more ethical because it is {{alternative.2}}.</p>
     <div style="text-align:center">  
-      <form action="foo" method="post">
+      <form action="alternatives" method="post">
          <input type="hidden" id="ingredient_id" name="ingredient_id" value={{alternative.0}}>
         <button type="submit" class="btn btn-success">Switch Ingredient</button>
-        <!-- <input type="submit" value="Switch Ingredient"> -->
       </form>
     </div>
 </div>

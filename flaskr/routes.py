@@ -58,9 +58,14 @@ def recipebook():
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_display')
-def recipe_search():
+def recipe_display():
 #   Get the recipe name  from the search bar
     recipe_name = request.args.get("recipe_name")
+
+    # Use session cookie if name not in the url
+    if recipe_name == None:
+        recipe_name = session['recipe_name_alt']
+
 #    print(recipe_name)
 #    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
@@ -76,7 +81,7 @@ def recipe_search():
     ingredient_list = list(execute_query(query))
     #   ingredient_list =[item for t in result for item in t]
     #   Pass the search query and the list of ingredients to the new html for display.
-    return render_template('recipe_display.html', name=recipe_name,recipeID = result, ingredients=ingredient_list)
+    return render_template('recipe_display.html', name=recipe_name,recipeID=recipe_id, ingredients=ingredient_list)
 
 
 @app.route('/search_recipe', methods=['GET', 'POST'])
@@ -108,40 +113,42 @@ def user_recipebook():
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
-@app.route('/foo', methods=['GET','POST'])
-def foo():
-
-    # recipe_id = int(request.args.get('recipeID'))
-    recipe_id = 1
-
-    # ingredient_id = int(request.args.get('ingredientID'))
-    ingredient_id = 5
-
-    query_name = """ SELECT  name 
-                     FROM ingredients 
-                     WHERE id = %d """ %(ingredient_id)
-
-    ingredient_name = list(execute_query(query_name))[0][0]
-
-    query_ingredients = """ SELECT ingredients.id,
-                                   ingredients.name,
-                                   ingredients.description 
-                            FROM ingredients
-                            INNER JOIN(
-                                SELECT ia.alt_ingredient_id 
-                                FROM ingredient_alts ia
-                                WHERE ia.ingredient_id = %d) alts
-                            ON ingredients.id = alts.alt_ingredient_id """ %(ingredient_id)
-
-    alternative_list = list(execute_query(query_ingredients))
+@app.route('/alternatives', methods=['GET','POST'])
+def alternatives():
 
     if request.method == 'GET': # Show alternatives
 
+        session['recipe_id_alt'] = int(request.args.get('recipeID'))
+        session['ingredient_id_alt'] = int(request.args.get('ingredientID'))
+        session['recipe_name_alt'] = request.args.get('recipe_name')
+
+        query_name = """ SELECT name, description 
+                         FROM ingredients 
+                         WHERE id = %d """ %(session['ingredient_id_alt'])
+
+        ingredient = list(execute_query(query_name))[0]
+
+        query_ingredients = """ SELECT ingredients.id,
+                                       ingredients.name,
+                                       ingredients.description 
+                                FROM ingredients
+                                INNER JOIN(
+                                    SELECT ia.alt_ingredient_id 
+                                    FROM ingredient_alts ia
+                                    WHERE ia.ingredient_id = %d) alts
+                                ON ingredients.id = alts.alt_ingredient_id """ %(session['ingredient_id_alt'])
+
+        alternative_list = list(execute_query(query_ingredients))
+
         unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
 
-        return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
+        return render_template('alternative_display.html', ingredient=ingredient, unethical=unethical_reason, alternatives = alternative_list)
 
     else: # POST request to switch ingredient
+        
+        recipe_id = session['recipe_id_alt']
+
+        ingredient_id = session['ingredient_id_alt']
 
         new_ingredient_id = int(request.form['ingredient_id'])
 
@@ -152,7 +159,7 @@ def foo():
 
         update = execute_query(query_recipe_ing)
 
-        return redirect(url_for('recipe_search'))
+        return redirect(url_for('recipe_display'))
     
 
 
