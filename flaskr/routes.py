@@ -88,8 +88,11 @@ def user_recipebook():
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
-@app.route('/foo')
+@app.route('/foo', methods=['GET','POST'])
 def foo():
+
+    # recipe_id = int(request.args.get('recipeID'))
+    recipe_id = 1
 
     # ingredient_id = int(request.args.get('ingredientID'))
     ingredient_id = 5
@@ -112,11 +115,22 @@ def foo():
 
     alternative_list = list(execute_query(query_ingredients))
 
+    if request.method == 'GET': # Show alternatives
 
-    unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+        unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
 
+        return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
 
-    return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
+    else: # POST request to switch ingredient
+
+        query_recipe_ing = """UPDATE recipes_ingredients 
+                              SET ingredient_id = %d
+                              WHERE recipe_id = %d
+                              AND ingredient_id = %d; """ %(ingredient_id,recipe_id,new_ingredient_id)
+
+        update = execute_query(query_recipe_ing)
+
+        return redirect(url_for('recipesearch'))
     
 
 
