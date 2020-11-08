@@ -235,6 +235,11 @@ INSERT INTO ingredients_concerns
 VALUES
 (5, 1);
 
+INSERT INTO ingredient_alts
+(ingredient_id, alt_ingredient_id)
+VALUES
+(1, 5);
+
 
 SET FOREIGN_KEY_CHECKS=1;
 
