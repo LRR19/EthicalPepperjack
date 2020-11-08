@@ -58,7 +58,7 @@ def recipebook():
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipesearch')
-def search_for_recipe():
+def recipesearch():
 #   Get the recipe name  from the search bar
 #   recipe_name = request.args.get("recipe_name")
     recipe_name = "tomato soup"
@@ -103,7 +103,7 @@ def foo():
 
     ingredient_name = list(execute_query(query_name))[0][0]
 
-    query_ingredients = """ SELECT 
+    query_ingredients = """ SELECT ingredients.id,
                                    ingredients.name,
                                    ingredients.description 
                             FROM ingredients
@@ -123,10 +123,12 @@ def foo():
 
     else: # POST request to switch ingredient
 
+        new_ingredient_id = int(request.form['ingredient_id'])
+
         query_recipe_ing = """UPDATE recipes_ingredients 
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
-                              AND ingredient_id = %d; """ %(ingredient_id,recipe_id,new_ingredient_id)
+                              AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
 
         update = execute_query(query_recipe_ing)
 
