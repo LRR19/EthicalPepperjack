@@ -35,30 +35,21 @@
 </head>
 <body>
 
-<h2 style="text-align:center">Ethical Alternatives for Milk</h2>
+<h2 style="text-align:center">Ethical Alternatives for {{ingredient}}</h2>
 <p style="text-align:center">Click on Ethical Alternatives for Info and to Switch.</p>
 
 <div>
-<p>Milk is unethical because it is water intensive to produce and high in greenhouse gas emissions.</p>
+<p>{{ingredient}} is unethical because it is {{unethical}}</p>
 </div>
 
-<button class="accordion">Soy Milk</button>
+{% for alternative in alternatives %}
+<button class="accordion">{{alternative}}</button>
 <div class="panel">
-  <p>It is a more ethical alternative because it uses less greenhouse emissions than milk.</p>
+  <p>It is more ethical because it is reason</p>
   <div style="text-align:center">  <input type="submit" value="Switch Ingredient"></div>
 </div>
+{% endfor %}
 
-<button class="accordion">Almond Milk</button>
-<div class="panel">
-  <p>It is a more ethical alternative because it uses less water than milk.</p>
-  <div style="text-align:center">  <input type="submit" value="Switch Ingredient"></div>
-</div>
-
-<button class="accordion">Cashew Milk</button>
-<div class="panel">
-  <p>It is a more ethical alternative because it uses less greenhouse emissions than milk.</p>
-  <div style="text-align:center">  <input type="submit" value="Switch Ingredient"></div>
-</div>
 
 <script>
 var acc = document.getElementsByClassName("accordion");

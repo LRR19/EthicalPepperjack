@@ -42,8 +42,17 @@ def search_for_recipe():
 
 @app.route('/foo')
 def foo():
-    return render_template('alternative_display.html')
+    ingredient_name = "Milk"
 
+    unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+
+    alternative_list = [('soy milk'),('almond milk'),('cashew milk')]
+
+    #reason_list = [('less water intensive'), ('greenhouse emission friendly'), ('less water intensive')]
+    #for r in reason_list:
+
+
+    return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
     
 
 # @app.route('/home', methods=['GET','POST'])
