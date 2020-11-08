@@ -13,25 +13,28 @@ def index():
 def search_category():
     if request.method == 'GET':
         return render_template('search_category.html')
+
     elif request.method == 'POST':
         user_data = request.form
         ethical_category = user_data['search_category']
-        ingredient_list = []
 
-        select_query = """SELECT * FROM ethical_categories WHERE name = %s"""
+        query_categories = """SELECT * FROM ethical_categories WHERE name = 
+        %s;"""
 
-        data = execute_query(select_query, (ethical_category))
+        data = execute_query(query_categories, ethical_category)
 
-        ethical_concern = """SELECT ethical_concerns.name FROM 
-        ethical_concerns INNER JOIN ingredients_concerns ON 
-        ethical_concerns.id = ingredients_concerns.concern_id  WHERE 
-        ingredient_concerns.ingredient_id = %s"""
-        data2 = execute_query(ethical_concern, str(data[0][0]))
+        query_ingredients = """SELECT ingredients.name 
+        FROM ingredients
+        WHERE ingredients.id = (
+            SELECT ia.alt_ingredient_id FROM ingredients
+            INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
+            INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
+            INNER JOIN ethical_categories e on ec.category_id = e.id
+            INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
+            WHERE e.name = %s);"""
+        data2 = execute_query(query_ingredients, str(data[0][1]))
         return render_template('search_category.html', name=ethical_category,
-                               ingredients=ingredient_list)
-
-
-
+                               ingredients=data2)
 
 
 # This will be all of the routes for the recipe book function. There will be a
