@@ -25,9 +25,11 @@ def search_category():
         ethical_category = user_data['search_category']
 
         query_categories = """SELECT * FROM ethical_categories WHERE name = 
-        %s;"""
+        \'%s\';""" %(ethical_category)
 
-        data = execute_query(query_categories, ethical_category)
+        data = execute_query(query_categories)
+
+        print(data)
 
         query_ingredients = """SELECT ingredients.name 
         FROM ingredients
@@ -40,8 +42,8 @@ def search_category():
                 INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
                 INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
                 INNER JOIN ethical_categories e on ec.category_id = e.id
-                WHERE e.name = %s));"""
-        data2 = execute_query(query_ingredients, str(data[0][1]))
+                WHERE e.id = %d));""" %(data[0][0])
+        data2 = execute_query(query_ingredients)
         return render_template('search_category.html', name=ethical_category,
                                ingredients=data2)
 
@@ -92,6 +94,7 @@ def foo():
     ingredient_name = "Milk"
 
     unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+
     
     alternative_list = [('0','soy milk', 'less water intensive'), ('1','almond milk', 'greenhouse emission friendly'), ('2', 'cashew milk', 'less water intensive')]
 
