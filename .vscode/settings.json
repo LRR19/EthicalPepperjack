@@ -2,5 +2,5 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "c:\\Users\\airma\\OneDrive\\Documents\\School\\CS361\\EthicalPepperjack\\venv\\Scripts\\python.exe"
+    "python.pythonPath": "venv\\Scripts\\python.exe"
 }
