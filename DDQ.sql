@@ -252,7 +252,7 @@ INSERT INTO ethical_categories
 VALUES
 ('meat','killing animals is not good'),
 ('water usage','we only have so much'),
-('pollution','if you can\'t breathe it doesn\'t matter what you eat')
-('carbon footprint','think about the polar bears')
-('pesticides','bees are friends')
+('pollution','if you can\'t breathe it doesn\'t matter what you eat'),
+('carbon footprint','think about the polar bears'),
+('pesticides','bees are friends'),
 ('food miles','local is better');
