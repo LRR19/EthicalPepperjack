@@ -31,19 +31,30 @@ def search_for_recipe():
 #   recipe_name = request.args.get("recipe_name")
     recipe_name = "tomato soup"   
 #   Find the associated recipe ID with the recipe name
-    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
+    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
     result = execute_query(id_query)
-#   Convert result tuple to integer
-    recipe_id = result[0][0]    
-    query = "SELECT ingredients.id, ingredients.name, ingredients.description, ingredients.origin FROM ingredients\
-    INNER JOIN recipes_ingredients ON ingredients.id = recipes_ingredients.ingredient_id\
-    WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
-#   Convert result tuple to list and then just get the first element of the tuple
-    ingredient_list = list(execute_query(query))
-#    ingredient_list =[item for t in result for item in t]
-#   Pass the search query and the list of ingredients to the new html for display.
-    return render_template('recipe_display.html', name=recipe_name, ingredients=ingredient_list)
+    print(type(result))
+    if(result):
+    #   Convert result tuple to integer
+        recipe_id = result[0][0]    
+        query = "SELECT i.id, i.name, i.description, i.origin FROM ingredients AS i\
+        INNER JOIN recipes_ingredients ON i.id = recipes_ingredients.ingredient_id\
+        WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
+    #   Convert result tuple to list and then just get the first element of the tuple
+        ingredient_list = list(execute_query(query))
+    #   ingredient_list =[item for t in result for item in t]
+    #   Pass the search query and the list of ingredients to the new html for display.
+        return render_template('recipe_display.html', name=recipe_name, ingredients=ingredient_list)
+    else:
+        return render_template('search_error.html')
 
+    
+@app.route('/user_recipebook')
+def user_recipebook():
+    username = "KC"
+    recipe_list = ['tomato soup', 'tuna sandwich', 'bacon and eggs']
+
+    return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
 
 
