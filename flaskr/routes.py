@@ -111,10 +111,10 @@ def foo():
 # 	# Execute query
 # 	# results = db_connect.execute_query(query)
 
-# @app.errorhandler(404)
-# def pageNotFound(error):
-# 	return render_template('404.html', title='Page Not Found')
+@app.errorhandler(404)
+def pageNotFound(error):
+	return render_template('404.html', title='Page Not Found')
 
-# @app.errorhandler(500)
-# def majorError(error):
-# 	return render_template('500.html', title='Major Error')
+@app.errorhandler(500)
+def majorError(error):
+	return render_template('500.html', title='Major Error')
