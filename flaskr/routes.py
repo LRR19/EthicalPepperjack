@@ -77,7 +77,7 @@ def recipe_search():
         ingredient_list = list(execute_query(query))
     #   ingredient_list =[item for t in result for item in t]
     #   Pass the search query and the list of ingredients to the new html for display.
-        return render_template('recipe_display.html', name=recipe_name, ingredients=ingredient_list)
+        return render_template('recipe_display.html', name=recipe_name,recipeID = result, ingredients=ingredient_list)
     else:
         return render_template('search_error.html')
 
