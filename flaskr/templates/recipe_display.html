@@ -17,8 +17,7 @@
                 <th scope="row">{{ingredient.1}}</td>
                 <td>{{ingredient.2}}</td>
                 <td>{{ingredient.3}}</td>
-                <td><a href="/foo?recipeID=recipeID?ingredientID={{ingredient.0}}"><button type ="button">Yes</button></a></td> 
-            
+                <td><a href="/foo?recipeID=recipeID?ingredientID={{ingredient.0}}?recipe_name={{name}}"><button type="button" class="btn btn-info btn-lg">Yes</button></a></td>           
         </tbody>
         {% endfor %}
     </table>

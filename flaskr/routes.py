@@ -57,29 +57,48 @@ def recipebook():
 
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
-@app.route('/recipe_search')
+@app.route('/recipe_display')
 def recipe_search():
 #   Get the recipe name  from the search bar
     recipe_name = request.args.get("recipe_name")
-    print(recipe_name)
-#   recipe_name = "tomato soup"
+#    print(recipe_name)
+#    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
     result = execute_query(id_query)
     print(type(result))
-    if(result):
     #   Convert result tuple to integer
-        recipe_id = result[0][0]
-        query = "SELECT i.id, i.name, i.description, i.origin FROM ingredients AS i\
-        INNER JOIN recipes_ingredients ON i.id = recipes_ingredients.ingredient_id\
-        WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
+    recipe_id = result[0][0]
+    query = "SELECT i.id, i.name, i.description, i.origin FROM ingredients AS i\
+    INNER JOIN recipes_ingredients ON i.id = recipes_ingredients.ingredient_id\
+    WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
     #   Convert result tuple to list and then just get the first element of the tuple
-        ingredient_list = list(execute_query(query))
+    ingredient_list = list(execute_query(query))
     #   ingredient_list =[item for t in result for item in t]
     #   Pass the search query and the list of ingredients to the new html for display.
-        return render_template('recipe_display.html', name=recipe_name,recipeID = result, ingredients=ingredient_list)
-    else:
-        return render_template('search_error.html')
+    return render_template('recipe_display.html', name=recipe_name,recipeID = result, ingredients=ingredient_list)
+
+
+@app.route('/search_recipe', methods=['GET', 'POST'])
+def search_recipe():
+    if request.method == 'GET':
+        return render_template('search_recipe.html')
+
+    elif request.method == 'POST':
+        user_data = request.form
+        recipe_name = user_data['search_recipe_name']
+
+        query = """SELECT name,id FROM recipes WHERE name = 
+        \'%s\';""" %(recipe_name)
+
+        recipes = list(execute_query(query))
+        
+
+        if(recipes):
+            return render_template('search_recipe.html', names=recipes)
+        else:
+            error_message=[("No recipes found, please try again",)]            
+            return render_template('search_recipe.html', names=error_message)
 
 
 @app.route('/user_recipebook')
@@ -98,7 +117,7 @@ def foo():
     # ingredient_id = int(request.args.get('ingredientID'))
     ingredient_id = 5
 
-    query_name = """ SELECT name 
+    query_name = """ SELECT  name 
                      FROM ingredients 
                      WHERE id = %d """ %(ingredient_id)
 
