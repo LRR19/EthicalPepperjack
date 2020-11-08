@@ -33,14 +33,13 @@ def search_category():
                                 FROM ingredients
                                 INNER JOIN(
                                     SELECT ia.alt_ingredient_id 
-                                    FROM ingredients
-                                    INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
+                                    FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = (
                                         SELECT ingredients.id FROM ingredients
                                         INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
                                         INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
                                         INNER JOIN ethical_categories e on ec.category_id = e.id
-                                        WHERE e.id = %d)) alts 
+                                        WHERE e.id = %d )) alts 
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
         data2 = execute_query(query_ingredients)
@@ -91,7 +90,36 @@ def user_recipebook():
 
 @app.route('/foo')
 def foo():
-    ingredient_name = "Milk"
+
+    # ingredient_id = int(request.args.get('ingredientID'))
+    # ingredient_id = 5
+
+    # query_name = """ SELECT name 
+    #                  FROM ingredients 
+    #                  WHERE id = %d """ %(ingredient_id)
+
+    # ingredient_name = list(execute_query(query_name))[0][0]
+    # print(ingredient_name)
+   
+
+    # query_ingredients = """ SELECT ingredients.name 
+    #                             FROM ingredients
+    #                             INNER JOIN(
+    #                                 SELECT ia.alt_ingredient_id 
+    #                                 FROM ingredients
+    #                                 INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
+    #                                 WHERE ia.ingredient_id = (
+    #                                     SELECT ingredients.id FROM ingredients
+    #                                     INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
+    #                                     INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
+    #                                     INNER JOIN ethical_categories e on ec.category_id = e.id
+    #                                     WHERE e.id = %d)) alts 
+    #                             ON ingredients.id = alts.alt_ingredient_id; """ %(ingredient_id)
+
+    # ingredients = list(execute_query(query_ingredients))
+    # print(ingredients)
+
+    ingredient_name = "MILK"
 
     unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
 
