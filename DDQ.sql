@@ -220,6 +220,26 @@ VALUES
 (3,5,1,'cups'),
 (3,10,3,'each');
 
+INSERT INTO rankings
+(name, ranking, description)
+VALUES
+('water', 6, 'water');
+
+INSERT INTO ethical_concerns
+(category_id, ranking_id, name, description)
+VALUES
+(2, 1, 'water usage', 'Uses too much water');
+
+INSERT INTO ingredients_concerns
+(ingredient_id, concern_id)
+VALUES
+(5, 1);
+
+INSERT INTO ingredient_alts
+(ingredient_id, alt_ingredient_id)
+VALUES
+(1, 5);
+
 
 SET FOREIGN_KEY_CHECKS=1;
 
