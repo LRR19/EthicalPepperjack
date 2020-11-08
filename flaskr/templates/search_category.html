@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1>{{ name }}</h1>
-    <form>
+    <h1>{{ Search }}</h1>
+    <form action="search_category" method="post">
         <div class="col-xs-4">
-            <label for="exampleInputEmail1">Search Category</label>
+            <label for="exampleInputEmail1">Search Ethical Category</label>
             <input type="search" class="form-control" id="search-field"
-                   aria-describedby="searchHelp">
+                   aria-describedby="searchHelp" name="search_category">
             <small id="searchHelp" class="form-text text-muted">Search for
                 an ethical problem category.
             </small>
         </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg">Search</button>
+        </div>
     </form>
-    <br>
-    <input class="btn btn-primary" type="submit" value="Submit">
+
 
 {% endblock %}
 
