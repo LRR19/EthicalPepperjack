@@ -48,10 +48,15 @@
 <button class="accordion">{{alternative.1}}</button>
 <div class="panel">
   <p>It is more ethical because it is {{alternative.2}}.</p>
-  <div style="text-align:center">  <input type="submit" value="Switch Ingredient"></div>
+    <div style="text-align:center">  
+      <form action="foo" method="post">
+         <input type="hidden" id="ingredient_id" name="ingredient_id" value={{alternative.0}}>
+        <button type="submit" class="btn btn-success">Switch Ingredient</button>
+        <!-- <input type="submit" value="Switch Ingredient"> -->
+      </form>
+    </div>
 </div>
 {% endfor %}
-
 
 
 <script>

@@ -33,14 +33,13 @@ def search_category():
                                 FROM ingredients
                                 INNER JOIN(
                                     SELECT ia.alt_ingredient_id 
-                                    FROM ingredients
-                                    INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
+                                    FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = (
                                         SELECT ingredients.id FROM ingredients
                                         INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
                                         INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
                                         INNER JOIN ethical_categories e on ec.category_id = e.id
-                                        WHERE e.id = %d)) alts 
+                                        WHERE e.id = %d )) alts 
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
         data2 = execute_query(query_ingredients)
@@ -59,7 +58,7 @@ def recipebook():
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_search')
-def search_for_recipe():
+def recipe_search():
 #   Get the recipe name  from the search bar
     recipe_name = request.args.get("recipe_name")
     print(recipe_name)
@@ -90,17 +89,51 @@ def user_recipebook():
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
-@app.route('/foo')
+@app.route('/foo', methods=['GET','POST'])
 def foo():
-    ingredient_name = "Milk"
 
-    unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+    # recipe_id = int(request.args.get('recipeID'))
+    recipe_id = 1
 
-    query = """SELECT  """
-    
-    alternative_list = [('0','soy milk', 'less water intensive'), ('1','almond milk', 'greenhouse emission friendly'), ('2', 'cashew milk', 'less water intensive')]
+    # ingredient_id = int(request.args.get('ingredientID'))
+    ingredient_id = 5
 
-    return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
+    query_name = """ SELECT name 
+                     FROM ingredients 
+                     WHERE id = %d """ %(ingredient_id)
+
+    ingredient_name = list(execute_query(query_name))[0][0]
+
+    query_ingredients = """ SELECT ingredients.id,
+                                   ingredients.name,
+                                   ingredients.description 
+                            FROM ingredients
+                            INNER JOIN(
+                                SELECT ia.alt_ingredient_id 
+                                FROM ingredient_alts ia
+                                WHERE ia.ingredient_id = %d) alts
+                            ON ingredients.id = alts.alt_ingredient_id """ %(ingredient_id)
+
+    alternative_list = list(execute_query(query_ingredients))
+
+    if request.method == 'GET': # Show alternatives
+
+        unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
+
+        return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
+
+    else: # POST request to switch ingredient
+
+        new_ingredient_id = int(request.form['ingredient_id'])
+
+        query_recipe_ing = """UPDATE recipes_ingredients 
+                              SET ingredient_id = %d
+                              WHERE recipe_id = %d
+                              AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
+
+        update = execute_query(query_recipe_ing)
+
+        return redirect(url_for('recipe_search'))
     
 
 
