@@ -16,6 +16,24 @@
         </div>
     </form>
 
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Ethical Category</th>
+            <th>Alternative Ingredient(s)</th>
+        </tr>
+    </thead>
+    {% for i in ingredients %}
+    <tbody>
+        <tr>
+            <td>{{name}}</td>
+            <td>{{i.0}}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
+
+</table>
+
 
 {% endblock %}
 
