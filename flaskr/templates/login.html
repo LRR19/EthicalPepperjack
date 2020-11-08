@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content  %}
+
+<form class="loginform">
+  <div class="form-group">
+    <label for="emaillabel">Email address</label>
+    <input type="text" class="form-control" id="emailinput" aria-describedby="emailHelp" placeholder="name@example.com">
+  </div>
+  <div class="form-group">
+    <label for="passsordlabel">Password</label>
+    <input type="text" class="form-control" id="passwordinput">
+  </div>
+  <button type="submit" class="btn btn-primary btn-block">Submit</button>
+  <a href="/signup" class="btn btn-success btn-block">Create an account</a>
+  <a href="#" class="btn btn-info btn-block">Continue as guest</a>
+</form>
+
+
+
+{% endblock %}
