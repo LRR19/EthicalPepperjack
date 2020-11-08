@@ -92,40 +92,29 @@ def user_recipebook():
 def foo():
 
     # ingredient_id = int(request.args.get('ingredientID'))
-    # ingredient_id = 5
+    ingredient_id = 5
 
-    # query_name = """ SELECT name 
-    #                  FROM ingredients 
-    #                  WHERE id = %d """ %(ingredient_id)
+    query_name = """ SELECT name 
+                     FROM ingredients 
+                     WHERE id = %d """ %(ingredient_id)
 
-    # ingredient_name = list(execute_query(query_name))[0][0]
-    # print(ingredient_name)
-   
+    ingredient_name = list(execute_query(query_name))[0][0]
 
-    # query_ingredients = """ SELECT ingredients.name 
-    #                             FROM ingredients
-    #                             INNER JOIN(
-    #                                 SELECT ia.alt_ingredient_id 
-    #                                 FROM ingredients
-    #                                 INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
-    #                                 WHERE ia.ingredient_id = (
-    #                                     SELECT ingredients.id FROM ingredients
-    #                                     INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
-    #                                     INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
-    #                                     INNER JOIN ethical_categories e on ec.category_id = e.id
-    #                                     WHERE e.id = %d)) alts 
-    #                             ON ingredients.id = alts.alt_ingredient_id; """ %(ingredient_id)
+    query_ingredients = """ SELECT 
+                                   ingredients.name,
+                                   ingredients.description 
+                            FROM ingredients
+                            INNER JOIN(
+                                SELECT ia.alt_ingredient_id 
+                                FROM ingredient_alts ia
+                                WHERE ia.ingredient_id = %d) alts
+                            ON ingredients.id = alts.alt_ingredient_id """ %(ingredient_id)
 
-    # ingredients = list(execute_query(query_ingredients))
-    # print(ingredients)
+    alternative_list = list(execute_query(query_ingredients))
 
-    ingredient_name = "MILK"
 
     unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
 
-    query = """SELECT  """
-    
-    alternative_list = [('0','soy milk', 'less water intensive'), ('1','almond milk', 'greenhouse emission friendly'), ('2', 'cashew milk', 'less water intensive')]
 
     return render_template('alternative_display.html', ingredient=ingredient_name, unethical=unethical_reason, alternatives = alternative_list)
     
