@@ -26,12 +26,15 @@ def search_category():
         query_ingredients = """SELECT ingredients.name 
         FROM ingredients
         WHERE ingredients.id = (
-            SELECT ia.alt_ingredient_id FROM ingredients
-            INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
-            INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
-            INNER JOIN ethical_categories e on ec.category_id = e.id
+            SELECT ia.alt_ingredient_id 
+            FROM ingredients
             INNER JOIN ingredient_alts ia on ingredients.id = ia.ingredient_id
-            WHERE e.name = %s);"""
+            WHERE ia.ingredient_id = (
+                SELECT ingredients.id FROM ingredients
+                INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
+                INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
+                INNER JOIN ethical_categories e on ec.category_id = e.id
+                WHERE e.name = %s));"""
         data2 = execute_query(query_ingredients, str(data[0][1]))
         return render_template('search_category.html', name=ethical_category,
                                ingredients=data2)
