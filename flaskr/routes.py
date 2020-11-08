@@ -51,17 +51,18 @@ def search_category():
 # Get to get the current users recipe
 # book. Delete will remove a recipe.
 
-@app.route('/recipebook')
+@app.route('/recipe_book')
 def recipebook():
     return render_template('recipe_book/user.html')
 
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
-@app.route('/recipesearch')
-def recipesearch():
+@app.route('/recipe_search')
+def recipe_search():
 #   Get the recipe name  from the search bar
-#   recipe_name = request.args.get("recipe_name")
-    recipe_name = "tomato soup"
+    recipe_name = request.args.get("recipe_name")
+    print(recipe_name)
+#   recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
     result = execute_query(id_query)
@@ -84,7 +85,7 @@ def recipesearch():
 @app.route('/user_recipebook')
 def user_recipebook():
     username = "KC"
-    recipe_list = ['tomato soup', 'tuna sandwich', 'bacon and eggs']
+    recipe_list = ['tomato soup', 'tuna sandwich', 'mashed potatoes']
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
@@ -132,7 +133,7 @@ def foo():
 
         update = execute_query(query_recipe_ing)
 
-        return redirect(url_for('recipesearch'))
+        return redirect(url_for('recipe_search'))
     
 
 
