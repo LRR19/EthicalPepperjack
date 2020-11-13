@@ -1,18 +1,25 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
+from .forms import LoginForm, SignUpForm
 
 from .db_connect import execute_query
 
 # Route to the login page
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        return render_template('login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 # Route to the signup page
 @app.route('/signup')
 def signup():
-    return render_template('signup.html')
+    form = SignUpForm()
+    if form.validate_on_submit():
+        return render_template('signup.html', form=form)
+    return render_template('signup.html', form=form)
 
 
 @app.route('/search_category', methods=['GET', 'POST'])
@@ -24,22 +31,22 @@ def search_category():
         user_data = request.form
         ethical_category = user_data['search_category']
 
-        query_categories = """SELECT * FROM ethical_categories WHERE name = 
+        query_categories = """SELECT * FROM ethical_categories WHERE name =
         \'%s\';""" %(ethical_category)
 
         data = execute_query(query_categories)
 
-        query_ingredients = """ SELECT ingredients.name 
+        query_ingredients = """ SELECT ingredients.name
                                 FROM ingredients
                                 INNER JOIN(
-                                    SELECT ia.alt_ingredient_id 
+                                    SELECT ia.alt_ingredient_id
                                     FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = (
                                         SELECT ingredients.id FROM ingredients
                                         INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
                                         INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
                                         INNER JOIN ethical_categories e on ec.category_id = e.id
-                                        WHERE e.id = %d )) alts 
+                                        WHERE e.id = %d )) alts
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
         data2 = execute_query(query_ingredients)
@@ -69,7 +76,7 @@ def recipe_display():
 #    print(recipe_name)
 #    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
-    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
+    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
     result = execute_query(id_query)
     print(type(result))
     #   Convert result tuple to integer
@@ -93,16 +100,16 @@ def search_recipe():
         user_data = request.form
         recipe_name = user_data['search_recipe_name']
 
-        query = """SELECT name,id FROM recipes WHERE name = 
+        query = """SELECT name,id FROM recipes WHERE name =
         \'%s\';""" %(recipe_name)
 
         recipes = list(execute_query(query))
-        
+
 
         if(recipes):
             return render_template('search_recipe.html', names=recipes)
         else:
-            error_message=[("No recipes found, please try again",)]            
+            error_message=[("No recipes found, please try again",)]
             return render_template('search_recipe.html', names=error_message)
 
 
@@ -122,18 +129,18 @@ def alternatives():
         session['ingredient_id_alt'] = int(request.args.get('ingredientID'))
         session['recipe_name_alt'] = request.args.get('recipe_name')
 
-        query_name = """ SELECT name, description 
-                         FROM ingredients 
+        query_name = """ SELECT name, description
+                         FROM ingredients
                          WHERE id = %d """ %(session['ingredient_id_alt'])
 
         ingredient = list(execute_query(query_name))[0]
 
         query_ingredients = """ SELECT ingredients.id,
                                        ingredients.name,
-                                       ingredients.description 
+                                       ingredients.description
                                 FROM ingredients
                                 INNER JOIN(
-                                    SELECT ia.alt_ingredient_id 
+                                    SELECT ia.alt_ingredient_id
                                     FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = %d) alts
                                 ON ingredients.id = alts.alt_ingredient_id """ %(session['ingredient_id_alt'])
@@ -145,14 +152,14 @@ def alternatives():
         return render_template('alternative_display.html', ingredient=ingredient, unethical=unethical_reason, alternatives = alternative_list)
 
     else: # POST request to switch ingredient
-        
+
         recipe_id = session['recipe_id_alt']
 
         ingredient_id = session['ingredient_id_alt']
 
         new_ingredient_id = int(request.form['ingredient_id'])
 
-        query_recipe_ing = """UPDATE recipes_ingredients 
+        query_recipe_ing = """UPDATE recipes_ingredients
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
                               AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
@@ -160,7 +167,7 @@ def alternatives():
         update = execute_query(query_recipe_ing)
 
         return redirect(url_for('recipe_display'))
-    
+
 
 
 # @app.route('/home', methods=['GET','POST'])
