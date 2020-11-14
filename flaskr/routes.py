@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, jsonify, url_for, flash, s
 from .forms import LoginForm, SignUpForm
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from .db_connect import execute_query
+from werkzeug.security import generate_password_hash, check_password_hash
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -45,7 +46,7 @@ def login():
         user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
         user_list = list(user)
         if user_list:
-            if(user_list[0][2] == form.password.data):
+            if(check_password_hash(user_list[0][2], form.password.data)):
                 user_obj = User(username=user_list[0][1], id=user_list[0][0])
                 login_user(user_obj)
                 return redirect('/profile')
@@ -66,7 +67,7 @@ def signup():
             flash("There is already an account with that name.")
         else:
             query = """INSERT INTO users (username, f_name, l_name, email, password) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
-            form.l_name.data, form.email.data, form.password.data)
+            form.l_name.data, form.email.data, generate_password_hash(form.password.data))
             try:
                 insert = execute_query(query)
                 return_id = list(execute_query("""SELECT id FROM users WHERE username = \'%s\';""" %(form.username.data)))
