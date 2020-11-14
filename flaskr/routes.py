@@ -1,20 +1,23 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
 from .forms import LoginForm, SignUpForm
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from .db_connect import execute_query
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
+# User Model for Flash-Login
 class User(UserMixin):
-    def _init_(self, username, id, active=True):
+    # Constructor for User Model
+    def __init__(self, username, id, active=True):
         self.username = username
         self.id = id
         self.active = active
+    # Returns true because users are always active
     def is_active(self):
-        return self.active
+        return True
+    # Returns false because users are always not anonymous
     def is_anonymous(self):
         return False
     def is_authenticated(self):
@@ -23,30 +26,38 @@ class User(UserMixin):
         return self.id
     @login_manager.user_loader
     def load_user(id):
-        return get_user(id)
-    def get_user(user_id):
-        user_id = int(user_id)
+        user_id = int(id)
         query = """SELECT id, username FROM users WHERE id = \'%d\';""" %(user_id)
-        dbuser = execute_query(query)
+        dbuser = list(execute_query(query))
         if(dbuser):
-            user_obj = User(name=dbuser.username, id=dbuser.id)
+            user_obj = User(username=dbuser[0][1], id=dbuser[0][0])
             print(type(user_obj))
             return user_obj
         else:
             return None
+
 
 # Route to the login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
-        print(type(user))
-        if user is not NONE:
-            if(user.password == form.password.data):
-                user_obj = User(name=user.username, id=user.id)
-                login_user(user)
-        return render_template('404.html')
+        user = list(execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data)))
+        print(user)
+        print(user[0])
+        print(user[0][2])
+        print(form.password.data)
+        if user is not None:
+            print(1)
+            if(user[0][2] == form.password.data):
+                print(2)
+                user_obj = User(username=user[0][1], id=user[0][0])
+                login_user(user_obj)
+                return redirect('/profile')
+            else:
+                flash("Unsuccessful")
+        else:
+            flash("Account is not found")
     return render_template('login.html', form=form)
 
 
@@ -58,20 +69,42 @@ def signup():
     if form.validate_on_submit():
         user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
         if(user):
-            print('2')
-            return render_template('404.html')
+            flash("There is already an account with that name.")
         else:
-            query = """INSERT INTO users (username, f_name, l_name, email, password)
+            query = """INSERT INTO users (username, f_name, l_name, email, password) OUTPUT Inserted.id
             VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
             form.l_name.data, form.email.data, form.password.data)
             try:
                 insert = execute_query(query)
-                return render_template('500.html')
+                user_obj = User(name=form.username.data,id=query)
+                login_user(user_obj)
+                flash("You have successfully signed up!")
+                redirect('/profile')
                 #alert successful
             except:
                 #alert not successful
-                return render_template('404.html')
+                flash("The username or email has already been used!")
     return render_template('signup.html', form=form)
+
+@app.route('/profile')
+@login_required
+def profile():
+    user_id = current_user.get_id()
+    try:
+        user = execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = \'%d\';""" %(user_id))
+        flash("Successful")
+        return render_template('profile.html', profile=user[0])
+    except:
+        flash("Error")
+        return render_template('404.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Account has been logged out")
+    return redirect('/login')
 
 
 @app.route('/search_category', methods=['GET', 'POST'])
