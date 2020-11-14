@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
         DataRequired()])
     password = PasswordField('Password', validators=[
         DataRequired(),
-        Length(min=8)])
+        Length(min=8, message="Length must be at least 8 characters")])
     submit = SubmitField('Submit')
 
 class SignUpForm(FlaskForm):
@@ -21,5 +21,5 @@ class SignUpForm(FlaskForm):
         DataRequired()])
     password = StringField('Password', validators=[
         DataRequired(),
-        Length(min=8)])
+        Length(min=8, message="Length must be at least 8 characters")])
     submit = SubmitField('Submit')

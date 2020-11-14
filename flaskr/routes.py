@@ -27,8 +27,9 @@ class User(UserMixin):
     @login_manager.user_loader
     def load_user(id):
         user_id = int(id)
-        query = """SELECT id, username FROM users WHERE id = \'%d\';""" %(user_id)
+        query = """SELECT id, username FROM users WHERE id = %d;""" %(user_id)
         dbuser = list(execute_query(query))
+        print(dbuser)
         if(dbuser):
             user_obj = User(username=dbuser[0][1], id=dbuser[0][0])
             print(type(user_obj))
@@ -36,26 +37,22 @@ class User(UserMixin):
         else:
             return None
 
-
 # Route to the login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = list(execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data)))
-        print(user)
-        print(user[0])
-        print(user[0][2])
-        print(form.password.data)
-        if user is not None:
-            print(1)
-            if(user[0][2] == form.password.data):
+        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
+        user_list = list(user)
+        if user_list:
+            print(50)
+            if(user_list[0][2] == form.password.data):
                 print(2)
-                user_obj = User(username=user[0][1], id=user[0][0])
+                user_obj = User(username=user_list[0][1], id=user_list[0][0])
                 login_user(user_obj)
                 return redirect('/profile')
             else:
-                flash("Unsuccessful")
+                flash("Password is incorrect")
         else:
             flash("Account is not found")
     return render_template('login.html', form=form)
@@ -71,27 +68,30 @@ def signup():
         if(user):
             flash("There is already an account with that name.")
         else:
-            query = """INSERT INTO users (username, f_name, l_name, email, password) OUTPUT Inserted.id
-            VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
+            query = """INSERT INTO users (username, f_name, l_name, email, password) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
             form.l_name.data, form.email.data, form.password.data)
             try:
                 insert = execute_query(query)
-                user_obj = User(name=form.username.data,id=query)
+                q2 = list(execute_query("""SELECT id FROM users WHERE username = \'%s\';""" %(form.username.data)))
+                user_obj = User(username=form.username.data, id=q2[0][0])
                 login_user(user_obj)
                 flash("You have successfully signed up!")
-                redirect('/profile')
+                return redirect('/profile')
                 #alert successful
             except:
                 #alert not successful
                 flash("The username or email has already been used!")
     return render_template('signup.html', form=form)
 
+
+
+
 @app.route('/profile')
 @login_required
 def profile():
     user_id = current_user.get_id()
     try:
-        user = execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = \'%d\';""" %(user_id))
+        user = execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = %d;""" %(user_id))
         flash("Successful")
         return render_template('profile.html', profile=user[0])
     except:
