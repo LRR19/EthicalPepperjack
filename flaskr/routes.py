@@ -45,9 +45,7 @@ def login():
         user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
         user_list = list(user)
         if user_list:
-            print(50)
             if(user_list[0][2] == form.password.data):
-                print(2)
                 user_obj = User(username=user_list[0][1], id=user_list[0][0])
                 login_user(user_obj)
                 return redirect('/profile')
@@ -62,7 +60,6 @@ def login():
 @app.route('/signup', methods=('GET', 'POST'))
 def signup():
     form = SignUpForm()
-    print('0')
     if form.validate_on_submit():
         user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
         if(user):
@@ -72,8 +69,8 @@ def signup():
             form.l_name.data, form.email.data, form.password.data)
             try:
                 insert = execute_query(query)
-                q2 = list(execute_query("""SELECT id FROM users WHERE username = \'%s\';""" %(form.username.data)))
-                user_obj = User(username=form.username.data, id=q2[0][0])
+                return_id = list(execute_query("""SELECT id FROM users WHERE username = \'%s\';""" %(form.username.data)))
+                user_obj = User(username=form.username.data, id=return_id[0][0])
                 login_user(user_obj)
                 flash("You have successfully signed up!")
                 return redirect('/profile')
@@ -91,8 +88,7 @@ def signup():
 def profile():
     user_id = current_user.get_id()
     try:
-        user = execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = %d;""" %(user_id))
-        flash("Successful")
+        user = list(execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = %d;""" %(user_id)))
         return render_template('profile.html', profile=user[0])
     except:
         flash("Error")
