@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content  %}
 
-<form class="signupform">
+<form class="signupform" method="POST">
   {{ form.csrf_token }}
   <div class="form-row">
     <div class="col">

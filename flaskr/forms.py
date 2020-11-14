@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[
         DataRequired()])
-    password = PasswordField('Username', validators=[
+    password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=8)])
     submit = SubmitField('Submit')
@@ -19,7 +19,7 @@ class SignUpForm(FlaskForm):
         DataRequired()])
     email = StringField('Email', validators=[
         DataRequired()])
-    password = StringField('Username', validators=[
+    password = StringField('Password', validators=[
         DataRequired(),
         Length(min=8)])
     submit = SubmitField('Submit')

@@ -1,24 +1,76 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
 from .forms import LoginForm, SignUpForm
-
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from .db_connect import execute_query
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+class User(UserMixin):
+    def _init_(self, username, id, active=True):
+        self.username = username
+        self.id = id
+        self.active = active
+    def is_active(self):
+        return self.active
+    def is_anonymous(self):
+        return False
+    def is_authenticated(self):
+        return True
+    def get_id(self):
+        return self.id
+    @login_manager.user_loader
+    def load_user(id):
+        return get_user(id)
+    def get_user(user_id):
+        user_id = int(user_id)
+        query = """SELECT id, username FROM users WHERE id = \'%d\';""" %(user_id)
+        dbuser = execute_query(query)
+        if(dbuser):
+            user_obj = User(name=dbuser.username, id=dbuser.id)
+            print(type(user_obj))
+            return user_obj
+        else:
+            return None
+
 # Route to the login page
-@app.route('/', methods=('GET', 'POST'))
+@app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        return render_template('login.html', form=form)
+        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
+        print(type(user))
+        if user is not NONE:
+            if(user.password == form.password.data):
+                user_obj = User(name=user.username, id=user.id)
+                login_user(user)
+        return render_template('404.html')
     return render_template('login.html', form=form)
 
 
 # Route to the signup page
-@app.route('/signup')
+@app.route('/signup', methods=('GET', 'POST'))
 def signup():
     form = SignUpForm()
+    print('0')
     if form.validate_on_submit():
-        return render_template('signup.html', form=form)
+        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
+        if(user):
+            print('2')
+            return render_template('404.html')
+        else:
+            query = """INSERT INTO users (username, f_name, l_name, email, password)
+            VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
+            form.l_name.data, form.email.data, form.password.data)
+            try:
+                insert = execute_query(query)
+                return render_template('500.html')
+                #alert successful
+            except:
+                #alert not successful
+                return render_template('404.html')
     return render_template('signup.html', form=form)
 
 
