@@ -23,17 +23,20 @@
         <thead>
         <tr>
             <th scope="col">Ingredient</th>
-            <th scope="col">Ethical Concerns</th>
+            <th scope="col">Description</th>
+            <th scope="col">Ranking</th>
             <th scope="col"></th>
         </tr>
         </thead>
 
-        {% for name in names %}
+        {% for ingredient in ingredients %}
             <tbody>
             <tr>
-                <td>{{ name.0 }}</td>
+                <td>{{ ingredient.0 }}</td>
+                <td>{{ ingredient.1 }}</td>
+                <td>{{ ingredient.2 if ingredient.2 != None else "Not ranked" }}
                 <td>
-                    <a href="/recipe_display?recipe_name={{name.0}}">
+                    <a href="/add_ingredients">
                         <button type="submit" class="btn btn-success">+</button>
                     </a>
                 </td>

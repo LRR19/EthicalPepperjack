@@ -178,9 +178,8 @@ def add_ingredients():
 					WHERE i.name LIKE ('%%%s%%');""" %(request.form['ingredient_name'])
 
 		ingredients = list(execute_query(query))
-		print(ingredients)
 
-		return render_template('add_ingredient.html',name=[])   
+		return render_template('add_ingredient.html',ingredients=ingredients)   
 
 
 # @app.route('/home', methods=['GET','POST'])
