@@ -160,7 +160,13 @@ def alternatives():
         update = execute_query(query_recipe_ing)
 
         return redirect(url_for('recipe_display'))
-    
+ 
+@app.route('/add_ingredients', methods=['GET','POST'])
+def add_ingredients():
+	
+	print(request.method, flush=True)
+	
+	return render_template('add_ingredient.html',name=[])   
 
 
 # @app.route('/home', methods=['GET','POST'])
