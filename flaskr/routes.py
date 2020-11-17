@@ -180,7 +180,7 @@ def add_ingredients():
 					LEFT JOIN ingredients_concerns ic ON i.id = ic.ingredient_id
 					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id 
 					LEFT JOIN rankings ON ec.ranking_id = rankings.id
-					WHERE i.name LIKE ('%%%s%%');""" %(request.args.get('ingredient_name'))
+					WHERE i.name LIKE (\'%%%s%%\');""" %(request.args.get('ingredient_name'))
 
 			ingredients = list(execute_query(query))
 
@@ -195,26 +195,17 @@ def add_ingredients():
 
 		recipe_id = int(session['recipe_id'])
 		ingredient_id = int(request.form['submit_ing_id'])
+		quantity = int(request.form['quantity'])
+		unit = request.form['unit']
 
 		query = """INSERT INTO recipes_ingredients
-					(recipe_id, ingredient_id) 
-					VALUES (%d,%d);""" %(recipe_id, ingredient_id)
+					(recipe_id, ingredient_id, quantity, unit) 
+					VALUES (%d,%d,%d,\'%s\');""" %(recipe_id, ingredient_id, quantity, unit)
 
 		execute_query(query)
 
 		return redirect(url_for('recipe_display'))
 			
-
-
-
-# @app.route('/home', methods=['GET','POST'])
-# def home():
-
-# 	# Sample query
-# 	# query = """SELECT * FROM table JOIN table.id = table2.id WHERE table.id = %d;""" %(table_id)
-
-# 	# Execute query
-# 	# results = db_connect.execute_query(query)
 
 @app.errorhandler(404)
 def pageNotFound(error):
