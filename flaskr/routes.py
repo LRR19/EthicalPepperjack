@@ -165,21 +165,30 @@ def alternatives():
 def add_ingredients():
 	
 	if request.method == "GET":
-		return render_template('add_ingredient.html',name=[])
 
-	if request.method == "POST":
-		query = """SELECT i.name,
+		if request.args.get('ingredient_name'):
+	
+			query = """SELECT i.name,
 					i.description,
 					rankings.ranking
 					FROM ingredients i
 					LEFT JOIN ingredients_concerns ic ON i.id = ic.ingredient_id
 					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id 
 					LEFT JOIN rankings ON ec.ranking_id = rankings.id
-					WHERE i.name LIKE ('%%%s%%');""" %(request.form['ingredient_name'])
+					WHERE i.name LIKE ('%%%s%%');""" %(request.args.get('ingredient_name'))
 
-		ingredients = list(execute_query(query))
+			ingredients = list(execute_query(query))
 
-		return render_template('add_ingredient.html',ingredients=ingredients)   
+		else:
+
+			ingredients = []
+
+
+	return render_template('add_ingredient.html',ingredients=ingredients)
+
+
+			
+
 
 
 # @app.route('/home', methods=['GET','POST'])
