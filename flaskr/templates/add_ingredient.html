@@ -32,13 +32,13 @@
         {% for ingredient in ingredients %}
             <tbody>
             <tr>
-                <td>{{ ingredient.0 }}</td>
                 <td>{{ ingredient.1 }}</td>
-                <td>{{ ingredient.2 if ingredient.2 != None else "Not ranked" }}
+                <td>{{ ingredient.2 }}</td>
+                <td>{{ ingredient.3 if ingredient.3 != None else "Not ranked" }}
                 <td>
-                    <a href="/add_ingredients">
-                        <button type="submit" class="btn btn-success">+</button>
-                    </a>
+                    <form action="add_ingredients" method="post">
+                        <button type="submit" class="btn btn-success" name="submit_ing_id" value="{{ ingredient.0 }}" >+</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

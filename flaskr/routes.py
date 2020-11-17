@@ -64,7 +64,7 @@ def recipe_display():
 
     # Use session cookie if name not in the url
     if recipe_name == None:
-        recipe_name = session['recipe_name_alt']
+        recipe_name = session['recipe_name']
 
 #    print(recipe_name)
 #    recipe_name = "tomato soup"
@@ -74,6 +74,10 @@ def recipe_display():
     print(type(result))
     #   Convert result tuple to integer
     recipe_id = result[0][0]
+    
+    session['recipe_id'] = recipe_id
+    session['recipe_name'] = recipe_name
+
     query = "SELECT i.id, i.name, i.description, i.origin FROM ingredients AS i\
     INNER JOIN recipes_ingredients ON i.id = recipes_ingredients.ingredient_id\
     WHERE recipes_ingredients.recipe_id = %d;" %(recipe_id)
@@ -120,7 +124,7 @@ def alternatives():
 
         session['recipe_id_alt'] = int(request.args.get('recipeID'))
         session['ingredient_id_alt'] = int(request.args.get('ingredientID'))
-        session['recipe_name_alt'] = request.args.get('recipe_name')
+        session['recipe_name'] = request.args.get('recipe_name')
 
         query_name = """ SELECT name, description 
                          FROM ingredients 
@@ -168,7 +172,8 @@ def add_ingredients():
 
 		if request.args.get('ingredient_name'):
 	
-			query = """SELECT i.name,
+			query = """SELECT i.id,
+					i.name,
 					i.description,
 					rankings.ranking
 					FROM ingredients i
@@ -184,9 +189,20 @@ def add_ingredients():
 			ingredients = []
 
 
-	return render_template('add_ingredient.html',ingredients=ingredients)
+		return render_template('add_ingredient.html',ingredients=ingredients)
 
+	if request.method == 'POST':
 
+		recipe_id = int(session['recipe_id'])
+		ingredient_id = int(request.form['submit_ing_id'])
+
+		query = """INSERT INTO recipes_ingredients
+					(recipe_id, ingredient_id) 
+					VALUES (%d,%d);""" %(recipe_id, ingredient_id)
+
+		execute_query(query)
+
+		return redirect(url_for('recipe_display'))
 			
 
 
