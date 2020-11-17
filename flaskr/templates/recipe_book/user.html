@@ -1,11 +1,71 @@
 {% extends 'base.html' %}
 {% block content  %}
-
-<h1>Am i here</h1>
-<h1>Am i here</h1>
-<h1>Am i here</h1>
-<h1>Am i here</h1>
-<h1>Am i here</h1>
-
-
+<div class="container-fluid">
+    <h1>Welcome, {{name}}</h1>
+    <table class= "table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <td scope="col-lg-12">Name</td>
+                <td scope="col-lg-12">Recipe Page</td>
+                <td scope="col-lg-12">Share</td>
+            </tr>
+        </thead>
+        {% for recipe in recipes %}
+        <tbody>
+            <tr>
+                <th scope="row">{{recipe}}</td>
+                <td>
+                    <a href="/recipe_display?recipe_name={{recipe}}">
+                        <i class="fa fa-external-link fa-lg"></i>
+                    </a>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#shareModal">Share <i class="fa fa-share-alt fa-lg"></i></button>
+                    <div id="shareModal" class="modal fade" role="dialog"center="auto">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <!--Modal content to with links to social media-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Share This Recipe</h4>
+                                    <button type="button" class="close" data-dismiss="modal" float="right">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-twitter fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-instagram fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-facebook fa-lg"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <i class="fa fa-link fa-lg"></i>
+                                                </span> 
+                                            </div>
+                                        </div>
+                                    </div>                                                               
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                   
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

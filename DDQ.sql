@@ -174,9 +174,7 @@ CREATE TABLE users_recipes(
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-
-
-
+SET FOREIGN_KEY_CHECKS=1;
 
 --
 -- Dumping data for table `ingredients`
@@ -195,7 +193,10 @@ VALUES
 ('flour','for baking','GA',''),
 ('halibut','fish','CA',''),
 ('potato','starchy veggie','ID',''),
-('tuna','fish','WA','');
+('tuna','fish','WA',''),
+('cashew milk','less water intensive than milk','CA',''),
+('almond milk','greenhouse gas emission friendly','CA',''),
+('soy milk','less water intensive than milk','CA','');
 
 --
 -- Dumping data for table `recipes`
@@ -220,11 +221,47 @@ VALUES
 (3,5,1,'cups'),
 (3,10,3,'each');
 
+--
+-- Dumping data for table `rankings`
+--
 
-SET FOREIGN_KEY_CHECKS=1;
+INSERT INTO rankings
+(name, ranking, description)
+VALUES
+('water', 6, 'water');
 
 --
--- Dumping data for table `ingredients`
+-- Dumping data for table `ethical_concerns`
+--
+
+INSERT INTO ethical_concerns
+(category_id, ranking_id, name, description)
+VALUES
+(2, 1, 'water usage', 'Uses too much water');
+
+--
+-- Dumping data for table `ingredients_concerns`
+--
+
+INSERT INTO ingredients_concerns
+(ingredient_id, concern_id)
+VALUES
+(5, 1);
+
+--
+-- Dumping data for table `ingredient_alts`
+--
+
+INSERT INTO ingredient_alts
+(ingredient_id, alt_ingredient_id)
+VALUES
+(5, 12),
+(5, 13),
+(5, 14);
+
+
+--
+-- Dumping data for table `ethical_categories`
 --
 
 INSERT INTO ethical_categories
@@ -232,7 +269,8 @@ INSERT INTO ethical_categories
 VALUES
 ('meat','killing animals is not good'),
 ('water usage','we only have so much'),
-('pollution','if you can\'t breathe it doesn\'t matter what you eat')
-('carbon footprint','think about the polar bears')
-('pesticides','bees are friends')
+('pollution','if you can\'t breathe it doesn\'t matter what you eat'),
+('carbon footprint','think about the polar bears'),
+('pesticides','bees are friends'),
 ('food miles','local is better');
+
