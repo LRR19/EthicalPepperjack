@@ -23,7 +23,7 @@ CREATE TABLE ingredient_alts(
     ingredient_id int,
 	alt_ingredient_id int,
 	PRIMARY KEY (ingredient_id,alt_ingredient_id),
-	FOREIGN KEY(ingredient_id) 
+	FOREIGN KEY(ingredient_id)
 	REFERENCES ingredients(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
@@ -58,14 +58,14 @@ CREATE TABLE recipes_ingredients(
 	quantity decimal(11,2) NOT NULL,
 	unit varchar(255) NOT NULL,
 	PRIMARY KEY (recipe_id,ingredient_id),
-	CONSTRAINT FK_Recipe FOREIGN KEY(recipe_id) 
+	CONSTRAINT FK_Recipe FOREIGN KEY(recipe_id)
 	REFERENCES recipes(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	CONSTRAINT FK_Ingredient FOREIGN KEY(ingredient_id)
 	REFERENCES ingredients(id)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE 
+	ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
@@ -136,7 +136,7 @@ CREATE TABLE ingredients_concerns(
 	CONSTRAINT FK_Concern FOREIGN KEY(concern_id)
 	REFERENCES ethical_concerns(id)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE  
+	ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
@@ -145,13 +145,15 @@ CREATE TABLE ingredients_concerns(
 --
 
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE users(
-	id int(11) NOT NULL AUTO_INCREMENT,
-	username varchar(255) NOT NULL,
-	f_name varchar(255) NOT NULL,
-	l_name varchar(255) NOT NULL,
-	PRIMARY KEY (id)  
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `f_name` varchar(255) NOT NULL,
+  `l_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 
 --
@@ -170,7 +172,7 @@ CREATE TABLE users_recipes(
 	CONSTRAINT FK_Recipe_U FOREIGN KEY(recipe_id)
 	REFERENCES recipes(id)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE  
+	ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
@@ -213,7 +215,7 @@ VALUES
 -- Dumping data for table `recipes_ingredients`
 --
 
-INSERT INTO recipes_ingredients 
+INSERT INTO recipes_ingredients
 (recipe_id,ingredient_id,quantity,unit)
 VALUES
 (1,1,3,'each'),
@@ -273,4 +275,3 @@ VALUES
 ('carbon footprint','think about the polar bears'),
 ('pesticides','bees are friends'),
 ('food miles','local is better');
-
