@@ -1,0 +1,32 @@
+<!--
+{% extends "base.html" %}
+{% block content  %}
+<div class="container-fluid">
+    <h1>Ethical Alternatives for {{ingredient.0}}</h1>
+    <h2>{{ingredient.0}} is unethical because it is {{ingredient.1}}</h2>
+    <table class="table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <td scope="col">Alternative Ethical Ingredients</td>
+                <td scope="col">Description</td> # take this off
+                <td scope="col">Origin</td>      # take this off
+                <td scope="col">Click to Switch Ingredient</td>
+            </tr>
+        </thead>
+        {% for alternative in alternatives %}
+        <tbody>
+            <tr>
+                <th scope="row">{{alternative.1}}</td>
+                <td>{{alternative.2}}</td>
+                <td>{{alternative.3}}</td>
+                <td><a><button type="button" class="btn btn-info btn-lg">Switch Ingredient</button></a></td>   
+        </tbody>
+        {% endfor %}
+    </table>
+
+</div>
+
+
+
+{% endblock %}
+--> 
