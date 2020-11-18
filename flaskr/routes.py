@@ -159,8 +159,7 @@ def recipe_display():
 #    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
-    result = execute_query(id_query)
-    print(type(result))
+    result = execute_query(id_query)    
     #   Convert result tuple to integer
     recipe_id = result[0][0]
 
@@ -200,11 +199,33 @@ def search_recipe():
 
 
 @app.route('/user_recipebook')
+@login_required
 def user_recipebook():
-    username = "KC"
-    recipe_list = ['tomato soup', 'tuna sandwich', 'mashed potatoes']
+    current_user_id = current_user.get_id()
 
-    return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
+    query_recipe_book = "SELECT r.id, r.name, r.description FROM recipes as r\
+    INNER JOIN users_recipes ON r.id = users_recipes.recipe_id\
+    WHERE users_recipes.user_id = %d;" %current_user_id
+
+    recipe_list = list(execute_query(query_recipe_book))
+
+    return render_template('recipe_book/user.html', recipes=recipe_list)
+
+@app.route('/add_recipe_to_user_book')
+@login_required
+def add_recipe_to_user_book():
+    if not current_user.is_authenticated:
+        return render_template('recipe_book/error.html')
+    else:
+        current_user_id = current_user.get_id()
+        recipe_id = int(request.args.get('recipeID'))
+
+        query_add_to_recipe_book ="INSERT INTO users_recipes (user_id,recipe_id) VALUES \
+        (%d,%d);"%(current_user_id,recipe_id)
+
+        execute_query(query_add_to_recipe_book)
+        
+        return redirect(url_for('user_recipebook'))
 
 @app.route('/alternatives', methods=['GET','POST'])
 def alternatives():
