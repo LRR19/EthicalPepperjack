@@ -92,32 +92,27 @@ def recipe_display():
 def search_recipe():
     if request.method == 'GET':
 
-        recipe_query = """SELECT * FROM recipes;"""
+        recipe_query = """SELECT name, description, ethical_ranking FROM recipes;"""
         display_recipes = list(execute_query(recipe_query))
 
-        if display_recipes:
-            return render_template('search_recipe.html', names=display_recipes)
-        else:
-            error_message = [("No recipes exist",)]
-            return render_template('search_recipe.html', names=error_message)
+        return render_template('search_recipe.html', recipe_list=display_recipes)
 
-        return render_template('search_recipe.html')
 
     elif request.method == 'POST':
         user_data = request.form
         recipe_name = user_data['search_recipe_name']
 
-        query = """SELECT name,id FROM recipes WHERE name = 
+        query = """SELECT name, description, ethical_ranking FROM recipes WHERE name = 
         \'%s\';""" %(recipe_name)
 
         recipes = list(execute_query(query))
-        
 
-        if(recipes):
-            return render_template('search_recipe.html', names=recipes)
+        if recipes:
+            return render_template('search_recipe.html', recipe_list=recipes)
         else:
             error_message=[("No recipes found, please try again",)]            
-            return render_template('search_recipe.html', names=error_message)
+            return render_template('search_recipe.html',
+                                   recipe_list=error_message)
 
 
 @app.route('/user_recipebook')
@@ -126,6 +121,7 @@ def user_recipebook():
     recipe_list = ['tomato soup', 'tuna sandwich', 'mashed potatoes']
 
     return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
+
 
 @app.route('/alternatives', methods=['GET','POST'])
 def alternatives():
