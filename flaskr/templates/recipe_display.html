@@ -22,7 +22,13 @@
         {% endfor %}
     </table>
     <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a>
-    <a href="/add_recipe_to_user_book?recipeID={{recipeID}}"><button type="button" class=" btn btn-success">Save Recipe</button></a>
+    <td>
+        <form action = "/add_recipe_to_user_book" method="POST">
+            <button class="btn btn-success"id="recipeID" name="recipeID" value="{{recipeID}}">Save Recipe</button> 
+        </form>
+    </td>
+
+    
 
 </div>
 
