@@ -9,6 +9,7 @@
                 <td scopt="col-lg-12">Description</td>
                 <td scope="col-lg-12">Recipe Page</td>
                 <td scope="col-lg-12">Share</td>
+                <td scope="col-lg-12">Remove Recipe</td>
             </tr>
         </thead>
         {% for recipe in recipes %}
@@ -63,6 +64,11 @@
                             </div>
                         </div>
                     </div>
+                </td>
+                <td>
+                    <form action = "/delete_recipe_from_user_book" method="POST">
+                        <button class="btn btn-success"id="recipeID" name="recipeID" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i></button> 
+                    </form>
                 </td>
                    
             </tr>

@@ -139,10 +139,50 @@ def search_category():
 # This will be all of the routes for the recipe book function. There will be a
 # Get to get the current users recipe
 # book. Delete will remove a recipe.
+@app.route('/user_recipebook')
+def user_recipebook():
+    if not current_user.is_authenticated:        
+        return render_template('recipe_book/error.html')
 
-@app.route('/recipe_book')
-def recipebook():
-    return render_template('recipe_book/user.html')
+    current_user_id = current_user.get_id()
+
+    query_recipe_book = "SELECT r.id, r.name, r.description FROM recipes as r\
+    INNER JOIN users_recipes ON r.id = users_recipes.recipe_id\
+    WHERE users_recipes.user_id = %d;" %current_user_id
+
+    recipe_list = list(execute_query(query_recipe_book))
+
+    return render_template('recipe_book/user.html', recipes=recipe_list)
+
+@app.route('/add_recipe_to_user_book', methods=['POST'])
+def add_recipe_to_user_book():
+    if not current_user.is_authenticated:
+        return redirect(url_for('recipe_book/error.html'))
+    else:
+        current_user_id = current_user.get_id()
+        recipe_id = int(request.form['recipeID'])
+
+        query_add_to_recipe_book ="INSERT INTO users_recipes (user_id,recipe_id) VALUES \
+        (%d,%d);"%(current_user_id,recipe_id)
+
+        execute_query(query_add_to_recipe_book)
+
+        return redirect(url_for('user_recipebook'))
+
+
+@app.route('/delete_recipe_from_user_book', methods=['POST'])
+def delete_recipe_from_user_book():
+    current_user_id = current_user.get_id()
+    recipe_id = int(request.form['recipeID'])
+
+    query_remove_from_recipe_book ="DELETE FROM users_recipes\
+    WHERE user_id = %d AND recipe_id = %d;"%(current_user_id,recipe_id)
+    
+    execute_query(query_remove_from_recipe_book)
+
+    return redirect(url_for('user_recipebook'))
+
+
 
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
@@ -198,35 +238,7 @@ def search_recipe():
             return render_template('search_recipe.html', names=error_message)
 
 
-@app.route('/user_recipebook')
-def user_recipebook():
-    if not current_user.is_authenticated:        
-        return render_template('recipe_book/error.html')
 
-    current_user_id = current_user.get_id()
-
-    query_recipe_book = "SELECT r.id, r.name, r.description FROM recipes as r\
-    INNER JOIN users_recipes ON r.id = users_recipes.recipe_id\
-    WHERE users_recipes.user_id = %d;" %current_user_id
-
-    recipe_list = list(execute_query(query_recipe_book))
-
-    return render_template('recipe_book/user.html', recipes=recipe_list)
-
-@app.route('/add_recipe_to_user_book', methods=['POST'])
-def add_recipe_to_user_book():
-    if not current_user.is_authenticated:
-        return redirect(url_for('recipe_book/error.html'))
-    else:
-        current_user_id = current_user.get_id()
-        recipe_id = int(request.form['recipeID'])
-
-        query_add_to_recipe_book ="INSERT INTO users_recipes (user_id,recipe_id) VALUES \
-        (%d,%d);"%(current_user_id,recipe_id)
-
-        execute_query(query_add_to_recipe_book)
-
-        return redirect(url_for('user_recipebook'))
 
 @app.route('/alternatives', methods=['GET','POST'])
 def alternatives():
