@@ -103,7 +103,8 @@ def logout():
     flash("Account has been logged out")
     return redirect('/login')
 
-# Route for guest
+
+# Route for guest (restrict saving recipes)
 @app.route('/guest')
 def guest():
     return render_template('search_category.html')
