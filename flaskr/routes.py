@@ -15,20 +15,28 @@ def signup():
     return render_template('signup.html')
 
 
+# Search for a ethical concern and displays alternative ingredients for you
+# to pick
 @app.route('/search_category', methods=['GET', 'POST'])
 def search_category():
+    # Retrieves the webpage
     if request.method == 'GET':
         return render_template('search_category.html')
 
     elif request.method == 'POST':
+        # user input
         user_data = request.form
         ethical_category = user_data['search_category']
 
+        # Find the associated information with the name of the ethical concern
         query_categories = """SELECT * FROM ethical_categories WHERE name = 
         \'%s\';""" %(ethical_category)
 
+        # get tuple results: name of ethical concern
         data = execute_query(query_categories)
 
+        # Find the alternative ingredient(s) associated  with the name of the
+        # ethical concern
         query_ingredients = """ SELECT ingredients.name 
                                 FROM ingredients
                                 INNER JOIN(
@@ -42,9 +50,11 @@ def search_category():
                                         WHERE e.id = %d )) alts 
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
-        data2 = execute_query(query_ingredients)
+        # get tuple results: name of alternative ingredient
+        alts_ingredient_query = execute_query(query_ingredients)
+
         return render_template('search_category.html', name=ethical_category,
-                               ingredients=data2)
+                               ingredients=alts_ingredient_query)
 
 
 # This will be all of the routes for the recipe book function. There will be a
@@ -54,6 +64,7 @@ def search_category():
 @app.route('/recipe_book')
 def recipebook():
     return render_template('recipe_book/user.html')
+
 
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
