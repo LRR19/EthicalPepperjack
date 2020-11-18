@@ -39,7 +39,7 @@ class User(UserMixin):
             return None
 
 # Route to the login page
-@app.route('/login', methods=('GET', 'POST'))
+@app.route('/', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -163,7 +163,7 @@ def recipe_display():
     print(type(result))
     #   Convert result tuple to integer
     recipe_id = result[0][0]
-    
+
     session['recipe_id'] = recipe_id
     session['recipe_name'] = recipe_name
 
@@ -253,21 +253,21 @@ def alternatives():
         update = execute_query(query_recipe_ing)
 
         return redirect(url_for('recipe_display'))
- 
+
 @app.route('/add_ingredients', methods=['GET','POST'])
 def add_ingredients():
-	
+
 	if request.method == "GET":
 
 		if request.args.get('ingredient_name'):
-	
+
 			query = """SELECT i.id,
 					i.name,
 					i.description,
 					rankings.ranking
 					FROM ingredients i
 					LEFT JOIN ingredients_concerns ic ON i.id = ic.ingredient_id
-					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id 
+					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id
 					LEFT JOIN rankings ON ec.ranking_id = rankings.id
 					WHERE i.name LIKE (\'%%%s%%\');""" %(request.args.get('ingredient_name'))
 
@@ -288,13 +288,13 @@ def add_ingredients():
 		unit = request.form['unit']
 
 		query = """INSERT INTO recipes_ingredients
-					(recipe_id, ingredient_id, quantity, unit) 
+					(recipe_id, ingredient_id, quantity, unit)
 					VALUES (%d,%d,%d,\'%s\');""" %(recipe_id, ingredient_id, quantity, unit)
 
 		execute_query(query)
 
 		return redirect(url_for('recipe_display'))
-			
+
 
 @app.errorhandler(404)
 def pageNotFound(error):
