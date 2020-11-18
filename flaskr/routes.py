@@ -199,8 +199,10 @@ def search_recipe():
 
 
 @app.route('/user_recipebook')
-@login_required
 def user_recipebook():
+    if not current_user.is_authenticated:
+        print("User not authenticated")
+        return render_template('recipe_book/error.html')
     current_user_id = current_user.get_id()
 
     query_recipe_book = "SELECT r.id, r.name, r.description FROM recipes as r\
@@ -211,11 +213,10 @@ def user_recipebook():
 
     return render_template('recipe_book/user.html', recipes=recipe_list)
 
-@app.route('/add_recipe_to_user_book')
-@login_required
+@app.route('/add_recipe_to_user_book,')
 def add_recipe_to_user_book():
     if not current_user.is_authenticated:
-        return render_template('recipe_book/error.html')
+        return redirect(url_for('recipe_book/error.html'))
     else:
         current_user_id = current_user.get_id()
         recipe_id = int(request.args.get('recipeID'))
@@ -224,7 +225,7 @@ def add_recipe_to_user_book():
         (%d,%d);"%(current_user_id,recipe_id)
 
         execute_query(query_add_to_recipe_book)
-        
+
         return redirect(url_for('user_recipebook'))
 
 @app.route('/alternatives', methods=['GET','POST'])
