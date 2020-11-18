@@ -118,8 +118,6 @@ def search_category():
         ethical_category = user_data['search_category']
 
         # Find the associated information with the name of the ethical concern
-        query_categories = """SELECT * FROM ethical_categories WHERE name = 
-
         query_categories = """SELECT * FROM ethical_categories WHERE name =
         \'%s\';""" %(ethical_category)
 
@@ -153,7 +151,7 @@ def search_category():
 # book. Delete will remove a recipe.
 @app.route('/user_recipebook')
 def user_recipebook():
-    if not current_user.is_authenticated:        
+    if not current_user.is_authenticated:
         return render_template('recipe_book/error.html')
 
     current_user_id = current_user.get_id()
@@ -189,7 +187,7 @@ def delete_recipe_from_user_book():
 
     query_remove_from_recipe_book ="DELETE FROM users_recipes\
     WHERE user_id = %d AND recipe_id = %d;"%(current_user_id,recipe_id)
-    
+
     execute_query(query_remove_from_recipe_book)
 
     return redirect(url_for('user_recipebook'))
@@ -212,7 +210,7 @@ def recipe_display():
 #    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
-    result = execute_query(id_query)    
+    result = execute_query(id_query)
     #   Convert result tuple to integer
     recipe_id = result[0][0]
 
@@ -257,13 +255,13 @@ def search_recipe():
         # Convert result tuple to list and get the first element of the tuple
         recipes = list(execute_query(query))
 
+
         # Display the search recipe or if not found, then display an error
         # message
         if recipes:
             return render_template('search_recipe.html', recipe_list=recipes)
         else:
-
-            error_message=[("No recipes found, please try again",)]            
+            error_message=[("No recipes found, please try again",)]
             return render_template('search_recipe.html',
                                    recipe_list=error_message)
 
