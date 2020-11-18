@@ -1,18 +1,107 @@
 from flaskr import app, db_connect
 from flask import render_template, request, redirect, jsonify, url_for, flash, session
-
+from .forms import LoginForm, SignUpForm
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from .db_connect import execute_query
+from werkzeug.security import generate_password_hash, check_password_hash
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# User Model for Flash-Login
+class User(UserMixin):
+    # Constructor for User Model
+    def __init__(self, username, id, active=True):
+        self.username = username
+        self.id = id
+        self.active = active
+    # Returns true because users are always active
+    def is_active(self):
+        return True
+    # Returns false because users are always not anonymous
+    def is_anonymous(self):
+        return False
+    def is_authenticated(self):
+        return True
+    def get_id(self):
+        return self.id
+    @login_manager.user_loader
+    def load_user(id):
+        user_id = int(id)
+        query = """SELECT id, username FROM users WHERE id = %d;""" %(user_id)
+        dbuser = list(execute_query(query))
+        print(dbuser)
+        if(dbuser):
+            user_obj = User(username=dbuser[0][1], id=dbuser[0][0])
+            print(type(user_obj))
+            return user_obj
+        else:
+            return None
 
 # Route to the login page
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
+        user_list = list(user)
+        if user_list:
+            if(check_password_hash(user_list[0][2], form.password.data)):
+                user_obj = User(username=user_list[0][1], id=user_list[0][0])
+                login_user(user_obj)
+                return redirect('/profile')
+            else:
+                flash("Password is incorrect")
+        else:
+            flash("Account is not found")
+    return render_template('login.html', form=form)
 
 
 # Route to the signup page
-@app.route('/signup')
+@app.route('/signup', methods=('GET', 'POST'))
 def signup():
-    return render_template('signup.html')
+    form = SignUpForm()
+    if form.validate_on_submit():
+        user = execute_query("""SELECT id, username, password FROM users WHERE username = \'%s\';""" %(form.username.data))
+        if(user):
+            flash("There is already an account with that name.")
+        else:
+            query = """INSERT INTO users (username, f_name, l_name, email, password) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')""" % (form.username.data, form.f_name.data,
+            form.l_name.data, form.email.data, generate_password_hash(form.password.data))
+            try:
+                insert = execute_query(query)
+                return_id = list(execute_query("""SELECT id FROM users WHERE username = \'%s\';""" %(form.username.data)))
+                user_obj = User(username=form.username.data, id=return_id[0][0])
+                login_user(user_obj)
+                flash("You have successfully signed up!")
+                return redirect('/profile')
+                #alert successful
+            except:
+                #alert not successful
+                flash("The username or email has already been used!")
+    return render_template('signup.html', form=form)
+
+
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    user_id = current_user.get_id()
+    try:
+        user = list(execute_query("""SELECT username, f_name, l_name, email FROM users WHERE id = %d;""" %(user_id)))
+        return render_template('profile.html', profile=user[0])
+    except:
+        flash("Error")
+        return render_template('404.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Account has been logged out")
+    return redirect('/login')
 
 
 # Search for a ethical concern and displays alternative ingredients for you
@@ -29,7 +118,7 @@ def search_category():
         ethical_category = user_data['search_category']
 
         # Find the associated information with the name of the ethical concern
-        query_categories = """SELECT * FROM ethical_categories WHERE name = 
+        query_categories = """SELECT * FROM ethical_categories WHERE name =
         \'%s\';""" %(ethical_category)
 
         # get tuple results: name of ethical concern
@@ -37,17 +126,17 @@ def search_category():
 
         # Find the alternative ingredient(s) associated  with the name of the
         # ethical concern
-        query_ingredients = """ SELECT ingredients.name 
+        query_ingredients = """ SELECT ingredients.name
                                 FROM ingredients
                                 INNER JOIN(
-                                    SELECT ia.alt_ingredient_id 
+                                    SELECT ia.alt_ingredient_id
                                     FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = (
                                         SELECT ingredients.id FROM ingredients
                                         INNER JOIN ingredients_concerns ON ingredients.id = ingredients_concerns.ingredient_id
                                         INNER JOIN ethical_concerns ec on ingredients_concerns.concern_id = ec.id
                                         INNER JOIN ethical_categories e on ec.category_id = e.id
-                                        WHERE e.id = %d )) alts 
+                                        WHERE e.id = %d )) alts
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
         # get tuple results: name of alternative ingredient
@@ -80,12 +169,12 @@ def recipe_display():
 #    print(recipe_name)
 #    recipe_name = "tomato soup"
 #   Find the associated recipe ID with the recipe name
-    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)    
+    id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
     result = execute_query(id_query)
     print(type(result))
     #   Convert result tuple to integer
     recipe_id = result[0][0]
-    
+
     session['recipe_id'] = recipe_id
     session['recipe_name'] = recipe_name
 
@@ -121,18 +210,19 @@ def search_recipe():
         recipe_name = user_data['search_recipe_name']
 
         # Find the associated recipe description and rank with the recipe name
-        query = """SELECT name, description, ethical_ranking FROM recipes WHERE name = 
+        query = """SELECT name, description, ethical_ranking FROM recipes WHERE name =
         \'%s\';""" %(recipe_name)
 
         # Convert result tuple to list and get the first element of the tuple
         recipes = list(execute_query(query))
+
 
         # Display the search recipe or if not found, then display an error
         # message
         if recipes:
             return render_template('search_recipe.html', recipe_list=recipes)
         else:
-            error_message=[("No recipes found, please try again",)]            
+            error_message=[("No recipes found, please try again",)]
             return render_template('search_recipe.html',
                                    recipe_list=error_message)
 
@@ -154,18 +244,18 @@ def alternatives():
         session['ingredient_id_alt'] = int(request.args.get('ingredientID'))
         session['recipe_name'] = request.args.get('recipe_name')
 
-        query_name = """ SELECT name, description 
-                         FROM ingredients 
+        query_name = """ SELECT name, description
+                         FROM ingredients
                          WHERE id = %d """ %(session['ingredient_id_alt'])
 
         ingredient = list(execute_query(query_name))[0]
 
         query_ingredients = """ SELECT ingredients.id,
                                        ingredients.name,
-                                       ingredients.description 
+                                       ingredients.description
                                 FROM ingredients
                                 INNER JOIN(
-                                    SELECT ia.alt_ingredient_id 
+                                    SELECT ia.alt_ingredient_id
                                     FROM ingredient_alts ia
                                     WHERE ia.ingredient_id = %d) alts
                                 ON ingredients.id = alts.alt_ingredient_id """ %(session['ingredient_id_alt'])
@@ -177,14 +267,14 @@ def alternatives():
         return render_template('alternative_display.html', ingredient=ingredient, unethical=unethical_reason, alternatives = alternative_list)
 
     else: # POST request to switch ingredient
-        
+
         recipe_id = session['recipe_id_alt']
 
         ingredient_id = session['ingredient_id_alt']
 
         new_ingredient_id = int(request.form['ingredient_id'])
 
-        query_recipe_ing = """UPDATE recipes_ingredients 
+        query_recipe_ing = """UPDATE recipes_ingredients
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
                               AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
@@ -192,21 +282,21 @@ def alternatives():
         update = execute_query(query_recipe_ing)
 
         return redirect(url_for('recipe_display'))
- 
+
 @app.route('/add_ingredients', methods=['GET','POST'])
 def add_ingredients():
-	
+
 	if request.method == "GET":
 
 		if request.args.get('ingredient_name'):
-	
+
 			query = """SELECT i.id,
 					i.name,
 					i.description,
 					rankings.ranking
 					FROM ingredients i
 					LEFT JOIN ingredients_concerns ic ON i.id = ic.ingredient_id
-					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id 
+					LEFT JOIN ethical_concerns ec ON ic.concern_id = ec.id
 					LEFT JOIN rankings ON ec.ranking_id = rankings.id
 					WHERE i.name LIKE (\'%%%s%%\');""" %(request.args.get('ingredient_name'))
 
@@ -227,13 +317,13 @@ def add_ingredients():
 		unit = request.form['unit']
 
 		query = """INSERT INTO recipes_ingredients
-					(recipe_id, ingredient_id, quantity, unit) 
+					(recipe_id, ingredient_id, quantity, unit)
 					VALUES (%d,%d,%d,\'%s\');""" %(recipe_id, ingredient_id, quantity, unit)
 
 		execute_query(query)
 
 		return redirect(url_for('recipe_display'))
-			
+
 
 @app.errorhandler(404)
 def pageNotFound(error):
