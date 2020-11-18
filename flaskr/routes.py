@@ -59,7 +59,7 @@ def recipebook():
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_display')
 def recipe_display():
-#   Get the recipe name  from the search bar
+#   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
     # Use session cookie if name not in the url
@@ -88,25 +88,36 @@ def recipe_display():
     return render_template('recipe_display.html', name=recipe_name,recipeID=recipe_id, ingredients=ingredient_list)
 
 
+# Route that displays a list of all recipes and a specific recipe after
+# searching for one.
 @app.route('/search_recipe', methods=['GET', 'POST'])
 def search_recipe():
+    # Displays a list of all recipes in the database once the page is visited
     if request.method == 'GET':
 
+        # Find the associated recipe name, description and rank
         recipe_query = """SELECT name, description, ethical_ranking FROM recipes;"""
+
+        # Convert result tuple to list and get the first element of the tuple
         display_recipes = list(execute_query(recipe_query))
 
         return render_template('search_recipe.html', recipe_list=display_recipes)
 
-
+    # Displays searched recipe
     elif request.method == 'POST':
+        # user input
         user_data = request.form
         recipe_name = user_data['search_recipe_name']
 
+        # Find the associated recipe description and rank with the recipe name
         query = """SELECT name, description, ethical_ranking FROM recipes WHERE name = 
         \'%s\';""" %(recipe_name)
 
+        # Convert result tuple to list and get the first element of the tuple
         recipes = list(execute_query(query))
 
+        # Display the search recipe or if not found, then display an error
+        # message
         if recipes:
             return render_template('search_recipe.html', recipe_list=recipes)
         else:
