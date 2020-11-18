@@ -91,6 +91,16 @@ def recipe_display():
 @app.route('/search_recipe', methods=['GET', 'POST'])
 def search_recipe():
     if request.method == 'GET':
+
+        recipe_query = """SELECT * FROM recipes;"""
+        display_recipes = list(execute_query(recipe_query))
+
+        if display_recipes:
+            return render_template('search_recipe.html', names=display_recipes)
+        else:
+            error_message = [("No recipes exist",)]
+            return render_template('search_recipe.html', names=error_message)
+
         return render_template('search_recipe.html')
 
     elif request.method == 'POST':
