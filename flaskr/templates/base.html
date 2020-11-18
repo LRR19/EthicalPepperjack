@@ -27,7 +27,7 @@
         		<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           		<a class="dropdown-item" href="/">Sign In</a>
           		<a class="dropdown-item" href="/signup">Sign Up</a>
-          		<a class="dropdown-item" href="#">Logout</a>
+          		<a class="dropdown-item" href="/logout">Logout</a>
         		</div>
       		</li>
 					<li class="nav-item dropdown">
@@ -36,7 +36,7 @@
         		</a>
         		<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           		<a class="dropdown-item" href="#">All Recipes</a>
-          		<a class="dropdown-item" href="#">Saved Recipes</a>
+          		<a class="dropdown-item" href="/user_recipebook">Saved Recipes</a>
         		</div>
       		</li>
       		<li class="nav-item">
@@ -53,7 +53,16 @@
   		</form>
 		</nav>
 
+
+
 		<div>
+		{% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ message }}
+    </div>
+    {% endfor %}
+
 		{% block content %}
 		{% endblock %}
 		</div>
