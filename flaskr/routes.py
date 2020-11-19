@@ -293,9 +293,7 @@ def alternatives():
 
         alternative_list = list(execute_query(query_ingredients))
 
-        unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
-
-        return render_template('alternative_display.html', ingredient=ingredient, unethical=unethical_reason, alternatives = alternative_list)
+        return render_template('alternative_display.html', ingredient=ingredient, alternatives=alternative_list)
 
     else: # POST request to switch ingredient
 
