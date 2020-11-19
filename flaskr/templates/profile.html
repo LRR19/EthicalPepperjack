@@ -1,7 +1,31 @@
 {% extends 'base.html' %}
+
 {% block content  %}
-<p>{{ profile.0}}</p>
-<p>{{ profile.1}}</p>
-<p>{{ profile.2}}</p>
-<p>{{ profile.3}}</p>
+
+{% if current_user.is_authenticated %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ current_user.id }}</th>
+      <td>{{ current_user.f_name }}</td>
+      <td>{{ current_user.l_name }}</td>
+      <td>{{ current_user.username }}</td>
+      <td>{{ current_user.email }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+{% endif %}
+
 {% endblock %}
