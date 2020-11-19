@@ -21,7 +21,24 @@
         </tbody>
         {% endfor %}
     </table>
-    <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md">
+                <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a> 
+            </div>
+            <div class="col-md">
+                <form action = "/add_recipe_to_user_book" method="POST">
+                    <button class="btn btn-success"id="recipeID" name="recipeID" value="{{recipeID}}">Save Recipe</button> 
+                </form>
+            </div>
+        </div>
+    </div>
+       
+ 
+
+
+
+    
 
 </div>
 

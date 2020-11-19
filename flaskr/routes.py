@@ -103,7 +103,7 @@ def logout():
     flash("Account has been logged out")
     return redirect('/login')
 
-
+  
 # Route for guest (restrict saving recipes)
 @app.route('/guest')
 def guest():
@@ -112,18 +112,24 @@ def guest():
 
 @app.route('/search_category', methods=['GET', 'POST'])
 def search_category():
+    # Retrieves the webpage
     if request.method == 'GET':
         return render_template('search_category.html')
 
     elif request.method == 'POST':
+        # user input
         user_data = request.form
         ethical_category = user_data['search_category']
 
+        # Find the associated information with the name of the ethical concern
         query_categories = """SELECT * FROM ethical_categories WHERE name =
         \'%s\';""" %(ethical_category)
 
+        # get tuple results: name of ethical concern
         data = execute_query(query_categories)
 
+        # Find the alternative ingredient(s) associated  with the name of the
+        # ethical concern
         query_ingredients = """ SELECT ingredients.name
                                 FROM ingredients
                                 INNER JOIN(
@@ -137,24 +143,67 @@ def search_category():
                                         WHERE e.id = %d )) alts
                                 ON ingredients.id = alts.alt_ingredient_id; """ %(data[0][0])
 
-        data2 = execute_query(query_ingredients)
+        # get tuple results: name of alternative ingredient
+        alts_ingredient_query = execute_query(query_ingredients)
+
         return render_template('search_category.html', name=ethical_category,
-                               ingredients=data2)
+                               ingredients=alts_ingredient_query)
 
 
 # This will be all of the routes for the recipe book function. There will be a
 # Get to get the current users recipe
 # book. Delete will remove a recipe.
+@app.route('/user_recipebook')
+def user_recipebook():
+    if not current_user.is_authenticated:
+        return render_template('recipe_book/error.html')
 
-@app.route('/recipe_book')
-def recipebook():
-    return render_template('recipe_book/user.html')
+    current_user_id = current_user.get_id()
+
+    query_recipe_book = "SELECT r.id, r.name, r.description FROM recipes as r\
+    INNER JOIN users_recipes ON r.id = users_recipes.recipe_id\
+    WHERE users_recipes.user_id = %d;" %current_user_id
+
+    recipe_list = list(execute_query(query_recipe_book))
+
+    return render_template('recipe_book/user.html', recipes=recipe_list)
+
+@app.route('/add_recipe_to_user_book', methods=['POST'])
+def add_recipe_to_user_book():
+    if not current_user.is_authenticated:
+        return redirect(url_for('recipe_book/error.html'))
+    else:
+        current_user_id = current_user.get_id()
+        recipe_id = int(request.form['recipeID'])
+
+        query_add_to_recipe_book ="INSERT INTO users_recipes (user_id,recipe_id) VALUES \
+        (%d,%d);"%(current_user_id,recipe_id)
+
+        execute_query(query_add_to_recipe_book)
+
+        return redirect(url_for('user_recipebook'))
+
+
+@app.route('/delete_recipe_from_user_book', methods=['POST'])
+def delete_recipe_from_user_book():
+    current_user_id = current_user.get_id()
+    recipe_id = int(request.form['recipeID'])
+
+    query_remove_from_recipe_book ="DELETE FROM users_recipes\
+    WHERE user_id = %d AND recipe_id = %d;"%(current_user_id,recipe_id)
+
+    execute_query(query_remove_from_recipe_book)
+
+    return redirect(url_for('user_recipebook'))
+
+
+
 
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_display')
 def recipe_display():
-#   Get the recipe name  from the search bar
+#   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
     # Use session cookie if name not in the url
@@ -166,7 +215,6 @@ def recipe_display():
 #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" %(recipe_name)
     result = execute_query(id_query)
-    print(type(result))
     #   Convert result tuple to integer
     recipe_id = result[0][0]
 
@@ -183,34 +231,44 @@ def recipe_display():
     return render_template('recipe_display.html', name=recipe_name,recipeID=recipe_id, ingredients=ingredient_list)
 
 
+# Route that displays a list of all recipes and a specific recipe after
+# searching for one.
 @app.route('/search_recipe', methods=['GET', 'POST'])
 def search_recipe():
+    # Displays a list of all recipes in the database once the page is visited
     if request.method == 'GET':
-        return render_template('search_recipe.html')
 
+        # Find the associated recipe name, description and rank
+        recipe_query = """SELECT name, description, ethical_ranking FROM recipes;"""
+
+        # Convert result tuple to list and get the first element of the tuple
+        display_recipes = list(execute_query(recipe_query))
+
+        return render_template('search_recipe.html', recipe_list=display_recipes)
+
+    # Displays searched recipe
     elif request.method == 'POST':
+        # user input
         user_data = request.form
         recipe_name = user_data['search_recipe_name']
 
-        query = """SELECT name,id FROM recipes WHERE name =
+        # Find the associated recipe description and rank with the recipe name
+        query = """SELECT name, description, ethical_ranking FROM recipes WHERE name =
         \'%s\';""" %(recipe_name)
 
+        # Convert result tuple to list and get the first element of the tuple
         recipes = list(execute_query(query))
 
 
-        if(recipes):
-            return render_template('search_recipe.html', names=recipes)
+        # Display the search recipe or if not found, then display an error
+        # message
+        if recipes:
+            return render_template('search_recipe.html', recipe_list=recipes)
         else:
             error_message=[("No recipes found, please try again",)]
-            return render_template('search_recipe.html', names=error_message)
+            return render_template('search_recipe.html',
+                                   recipe_list=error_message)
 
-
-@app.route('/user_recipebook')
-def user_recipebook():
-    username = "KC"
-    recipe_list = ['tomato soup', 'tuna sandwich', 'mashed potatoes']
-
-    return render_template('recipe_book/user.html', name=username, recipes=recipe_list)
 
 @app.route('/alternatives', methods=['GET','POST'])
 def alternatives():
@@ -239,22 +297,14 @@ def alternatives():
 
         alternative_list = list(execute_query(query_ingredients))
 
-        unethical_reason = "water intensive to produce and high in greenhouse gas emissions."
-
-        return render_template('alternative_display.html', ingredient=ingredient, unethical=unethical_reason, alternatives = alternative_list)
+        return render_template('alternative_display.html', ingredient=ingredient, alternatives=alternative_list)
 
     else: # POST request to switch ingredient
-
-        recipe_id = session['recipe_id_alt']
-
-        ingredient_id = session['ingredient_id_alt']
-
-        new_ingredient_id = int(request.form['ingredient_id'])
 
         query_recipe_ing = """UPDATE recipes_ingredients
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
-                              AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
+                              AND ingredient_id = %d; """ %(int(request.form['ingredient_id']),session['recipe_id_alt'],session['ingredient_id_alt'])
 
         update = execute_query(query_recipe_ing)
 

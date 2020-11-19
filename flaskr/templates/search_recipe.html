@@ -4,7 +4,8 @@
 
 {% block content %}
 
-    <h2 style="text-align:center">Look up an Recipe</h2>
+    <br>
+    <h2 style="text-align:center">Look up a Recipe</h2>
     <br>
 
     <form action="search_recipe" method="post">
@@ -16,31 +17,33 @@
                    aria-describedby="searchHelp" name="search_recipe_name">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
+        <br>
+        <table class="table table-striped table-dark mx-auto"
+               style="width: 1000px;">
+            <thead>
+            <tr>
+                <th scope="col">Recipe name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Ethical Rank</th>
+            </tr>
+            </thead>
+
+            {% for i in recipe_list %}
+                <tbody>
+                <tr>
+                    <td>{{ i.0 }}</td>
+                    <td>{{ i.1 }}</td>
+                    <td>{{ i.2 }}</td>
+
+                </tr>
+                </tbody>
+
+            {% endfor %}
+
+        </table>
     </form>
     <br>
 
-    <table class="table table-striped table-dark mx-auto" style="width: 1000px;">
-        <thead>
-        <tr>
-            <th scope="col">Recipe name</th>
-            <th scope="col">Link</th>
-        </tr>
-        </thead>
-
-        {% for name in names %}
-            <tbody>
-            <tr>
-                <td>{{ name.0 }}</td>
-                <td>
-                    <a href="/recipe_display?recipe_name={{name.0}}">
-                        <i class="fa fa-external-link fa-lg"></i>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        {% endfor %}
-
-    </table>
 
 
 {% endblock %}

@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 {% block content  %}
 <div class="container-fluid">
-    <h1>Welcome, {{name}}</h1>
+    <h1>Welcome, {{current_user.username}}</h1>
     <table class= "table table-hover">
         <thead class="thead-light">
             <tr>
                 <td scope="col-lg-12">Name</td>
+                <td scopt="col-lg-12">Description</td>
                 <td scope="col-lg-12">Recipe Page</td>
                 <td scope="col-lg-12">Share</td>
+                <td scope="col-lg-12">Remove Recipe</td>
             </tr>
         </thead>
         {% for recipe in recipes %}
         <tbody>
             <tr>
-                <th scope="row">{{recipe}}</td>
+                <th scope="row">{{recipe.1}}</th>
+                <td>{{recipe.2}}</td>
                 <td>
-                    <a href="/recipe_display?recipe_name={{recipe}}">
+                    <a href="/recipe_display?recipe_name={{recipe.1}}">
                         <i class="fa fa-external-link fa-lg"></i>
                     </a>
                 </td>
@@ -61,6 +64,11 @@
                             </div>
                         </div>
                     </div>
+                </td>
+                <td>
+                    <form action = "/delete_recipe_from_user_book" method="POST">
+                        <button class="btn btn-success"id="recipeID" name="recipeID" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i></button> 
+                    </form>
                 </td>
                    
             </tr>
