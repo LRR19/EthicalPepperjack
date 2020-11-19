@@ -103,9 +103,13 @@ def logout():
     flash("Account has been logged out")
     return redirect('/login')
 
+  
+# Route for guest (restrict saving recipes)
+@app.route('/guest')
+def guest():
+    return render_template('add_ingredient.html')
 
-# Search for a ethical concern and displays alternative ingredients for you
-# to pick
+
 @app.route('/search_category', methods=['GET', 'POST'])
 def search_category():
     # Retrieves the webpage
