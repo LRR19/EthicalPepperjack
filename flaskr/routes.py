@@ -351,6 +351,10 @@ def add_ingredients():
 
 		return redirect(url_for('recipe_display'))
 
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
 
 @app.errorhandler(404)
 def pageNotFound(error):
@@ -359,3 +363,4 @@ def pageNotFound(error):
 @app.errorhandler(500)
 def majorError(error):
 	return render_template('500.html', title='Major Error')
+
