@@ -297,16 +297,10 @@ def alternatives():
 
     else: # POST request to switch ingredient
 
-        recipe_id = session['recipe_id_alt']
-
-        ingredient_id = session['ingredient_id_alt']
-
-        new_ingredient_id = int(request.form['ingredient_id'])
-
         query_recipe_ing = """UPDATE recipes_ingredients
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
-                              AND ingredient_id = %d; """ %(new_ingredient_id,recipe_id,ingredient_id)
+                              AND ingredient_id = %d; """ %(int(request.form['ingredient_id']),session['recipe_id_alt'],session['ingredient_id_alt'])
 
         update = execute_query(query_recipe_ing)
 
