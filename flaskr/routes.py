@@ -107,7 +107,8 @@ def logout():
 # Route for guest (restrict saving recipes)
 @app.route('/guest')
 def guest():
-    return render_template('search_category.html')
+    # return render_template('search_category.html') # note:will ask team what to do
+    return render_template('add_ingredient.html')
 
 
 @app.route('/search_category', methods=['GET', 'POST'])
