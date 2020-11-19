@@ -129,6 +129,12 @@ def logout():
     return redirect('/login')
 
 
+# Route for guest (restrict saving recipes)
+@app.route('/guest')
+def guest():
+    return render_template('add_ingredient.html')
+
+
 # Search for an ethical concern and displays alternative ingredients
 @app.route('/search_category', methods=['GET', 'POST'])
 def search_category():
@@ -167,6 +173,7 @@ def search_category():
                                 ON ingredients.id = alts.alt_ingredient_id; """ \
                             % (data[0][0])
 
+        # get tuple results: name of alternative ingredient
         alts_ingredient_query = execute_query(query_ingredients)
 
         return render_template('search_category.html', name=ethical_category,
@@ -323,27 +330,19 @@ def alternatives():
 
         alternative_list = list(execute_query(query_ingredients))
 
-        unethical_reason = "water intensive to produce and high in " \
-                           "greenhouse gas emissions."
-
         return render_template('alternative_display.html',
                                ingredient=ingredient,
-                               unethical=unethical_reason,
                                alternatives=alternative_list)
 
     else:  # POST request to switch ingredient
-
-        recipe_id = session['recipe_id_alt']
-
-        ingredient_id = session['ingredient_id_alt']
-
-        new_ingredient_id = int(request.form['ingredient_id'])
 
         query_recipe_ing = """UPDATE recipes_ingredients
                               SET ingredient_id = %d
                               WHERE recipe_id = %d
                               AND ingredient_id = %d; """ \
-                           % (new_ingredient_id, recipe_id, ingredient_id)
+                           % (int(request.form['ingredient_id']),
+                              session['recipe_id_alt'],
+                              session['ingredient_id_alt'])
 
         update = execute_query(query_recipe_ing)
 
@@ -387,6 +386,16 @@ def add_ingredients():
         execute_query(query)
 
         return redirect(url_for('recipe_display'))
+
+
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html')
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 
 @app.errorhandler(404)
