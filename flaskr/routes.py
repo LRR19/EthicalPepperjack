@@ -129,16 +129,13 @@ def logout():
     return redirect('/login')
 
 
-# Search for a ethical concern and displays alternative ingredients for you
-# to pick
+# Search for an ethical concern and displays alternative ingredients
 @app.route('/search_category', methods=['GET', 'POST'])
 def search_category():
-    # Retrieves the webpage
     if request.method == 'GET':
         return render_template('search_category.html')
 
     elif request.method == 'POST':
-        # user input
         user_data = request.form
         ethical_category = user_data['search_category']
 
@@ -170,7 +167,6 @@ def search_category():
                                 ON ingredients.id = alts.alt_ingredient_id; """ \
                             % (data[0][0])
 
-        # get tuple results: name of alternative ingredient
         alts_ingredient_query = execute_query(query_ingredients)
 
         return render_template('search_category.html', name=ethical_category,
@@ -266,11 +262,9 @@ def recipe_display():
                            recipeID=recipe_id, ingredients=ingredient_list)
 
 
-# Route that displays a list of all recipes and a specific recipe after
-# searching for one.
+# Displays a list of all recipes or a specific recipe after searching for one.
 @app.route('/search_recipe', methods=['GET', 'POST'])
 def search_recipe():
-    # Displays a list of all recipes in the database once the page is visited
     if request.method == 'GET':
 
         # Find the associated recipe name, description and rank
@@ -285,7 +279,6 @@ def search_recipe():
 
     # Displays searched recipe
     elif request.method == 'POST':
-        # user input
         user_data = request.form
         recipe_name = user_data['search_recipe_name']
 
@@ -293,11 +286,8 @@ def search_recipe():
         query = """SELECT name, description, ethical_ranking
                     FROM recipes WHERE name = \'%s\';""" % recipe_name
 
-        # Convert result tuple to list and get the first element of the tuple
         recipes = list(execute_query(query))
 
-        # Display the search recipe or if not found, then display an error
-        # message
         if recipes:
             return render_template('search_recipe.html', recipe_list=recipes)
         else:
