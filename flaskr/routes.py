@@ -351,6 +351,10 @@ def add_ingredients():
 
 		return redirect(url_for('recipe_display'))
 
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html')
+
 @app.route('/faq')
 def faq():
     return render_template('faq.html')
