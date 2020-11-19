@@ -7,12 +7,29 @@
 {% block content  %}
 
 {% if current_user.is_authenticated %}
-  <p>Id: {{ current_user.id }}<p>
-  <p>Username: {{ current_user.username }}<p>
-  <p>First Name: {{ current_user.f_name }}<p>
-  <p>Last Name: {{ current_user.l_name }}<p>
-  <p>Email: {{ current_user.email }}<p>
-  <p>Password: {{ current_user.password }}<p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ current_user.id }}</th>
+      <td>{{ current_user.f_name }}</td>
+      <td>{{ current_user.l_name }}</td>
+      <td>{{ current_user.username }}</td>
+      <td>{{ current_user.email }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
 {% endif %}
 
 {% endblock %}
