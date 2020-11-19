@@ -25,6 +25,7 @@
                 <th scope="col">Recipe name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Ethical Rank</th>
+                <th scope="col">Link to Ingredients</th>
             </tr>
             </thead>
 
@@ -34,7 +35,12 @@
                     <td>{{ i.0 }}</td>
                     <td>{{ i.1 }}</td>
                     <td>{{ i.2 }}</td>
-
+                    <td>
+                    <a href="/recipe_display?recipe_name={{i.3}}">
+                        <i class="fa fa-external-link fa-lg"
+                           style="padding-left: 60px"></i>
+                    </a>
+                    </td>
                 </tr>
                 </tbody>
 
