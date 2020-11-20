@@ -192,8 +192,7 @@ def recipe_display():
     if recipe_name is None:
         recipe_name = session['recipe_name']
 
-    #    print(recipe_name)
-    #    recipe_name = "tomato soup"
+
     #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
@@ -212,7 +211,7 @@ def recipe_display():
     #   element of the tuple
     ingredient_list = list(execute_query(query))
 
-    #   ingredient_list =[item for t in result for item in t]
+    
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
     return render_template('recipe_display.html', name=recipe_name,
