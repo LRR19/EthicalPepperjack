@@ -18,3 +18,15 @@
 	align-items: center;
 	margin-top: 20px;
 }
+body {
+	background-color: #FCFCFC;
+	color:#4c4c4c;
+}
+td {
+	text-align: center;
+	text-transform: capitalize;
+}
+th {
+	text-align:center;
+	text-transform: capitalize;
+}

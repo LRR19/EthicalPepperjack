@@ -210,7 +210,6 @@ def recipe_display():
 
     #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
-
     
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
