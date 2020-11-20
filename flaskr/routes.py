@@ -194,7 +194,7 @@ def recipe_display():
     else:
         session['recipe_name'] = recipe_name
 
-    #   Find the associated recipe ID with the recipe name
+    
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
     #   Convert result tuple to integer
@@ -202,14 +202,13 @@ def recipe_display():
     #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
     
-    
+    #   Select all ingredients in recipes_ingredients table for display
     query = "SELECT i.id, i.name, i.description, i.origin " \
             "FROM ingredients AS i INNER JOIN recipes_ingredients " \
             "ON i.id = recipes_ingredients.ingredient_id " \
             "WHERE recipes_ingredients.recipe_id = %d;" % recipe_id
 
-    #   Convert result tuple to list and then just get the first
-    #   element of the tuple
+    #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
 
     
