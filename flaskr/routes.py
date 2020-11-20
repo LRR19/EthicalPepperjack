@@ -188,20 +188,21 @@ def recipe_display():
     #   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
-    # Use session cookie if name not in the url
+    # Use session cookie if name not in the url. Else, add recipe name to session cookie
     if recipe_name is None:
         recipe_name = session['recipe_name']
-
+    else:
+        session['recipe_name'] = recipe_name
 
     #   Find the associated recipe ID with the recipe name
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
     #   Convert result tuple to integer
     recipe_id = result[0][0]
-
+    #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
-    session['recipe_name'] = recipe_name
-
+    
+    
     query = "SELECT i.id, i.name, i.description, i.origin " \
             "FROM ingredients AS i INNER JOIN recipes_ingredients " \
             "ON i.id = recipes_ingredients.ingredient_id " \
