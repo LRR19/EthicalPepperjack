@@ -188,31 +188,29 @@ def recipe_display():
     #   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
-    # Use session cookie if name not in the url
+    # Use session cookie if name not in the url. Else, add recipe name to session cookie
     if recipe_name is None:
         recipe_name = session['recipe_name']
+    else:
+        session['recipe_name'] = recipe_name
 
-    #    print(recipe_name)
-    #    recipe_name = "tomato soup"
-    #   Find the associated recipe ID with the recipe name
+    
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
     #   Convert result tuple to integer
     recipe_id = result[0][0]
-
+    #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
-    session['recipe_name'] = recipe_name
-
+    
+    #   Select all ingredients in recipes_ingredients table for display
     query = "SELECT i.id, i.name, i.description, i.origin " \
             "FROM ingredients AS i INNER JOIN recipes_ingredients " \
             "ON i.id = recipes_ingredients.ingredient_id " \
             "WHERE recipes_ingredients.recipe_id = %d;" % recipe_id
 
-    #   Convert result tuple to list and then just get the first
-    #   element of the tuple
+    #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
-
-    #   ingredient_list =[item for t in result for item in t]
+    
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
     return render_template('recipe_display.html', name=recipe_name,
