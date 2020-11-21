@@ -19,12 +19,10 @@
                 <th scope="row">{{recipe.1}}</th>
                 <td>{{recipe.2}}</td>
                 <td>
-                    <a href="/recipe_display?recipe_name={{recipe.1}}">
-                        <i class="fa fa-external-link fa-lg"></i>
-                    </a>
+                    <a href="/recipe_display?recipe_name={{recipe.1}}"><button class="btn btn-info btn-md"><i class="fa fa-external-link fa-lg"></i> Go To Recipe</button></a>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#shareModal">Share <i class="fa fa-share-alt fa-lg"></i></button>
+                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#shareModal"> <i class="fa fa-share-alt fa-lg"></i> Share</button>
                     <div id="shareModal" class="modal fade" role="dialog"center="auto">
                         <div class="modal-dialog modal-dialog-centered">
                             <!--Modal content to with links to social media-->
@@ -68,7 +66,7 @@
                 </td>
                 <td>
                     <form action = "/delete_recipe_from_user_book" method="POST">
-                        <button class="btn btn-success"id="recipeID" name="recipeID" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i></button> 
+                        <button class="btn btn-info btn-md"id="recipeID" name="recipeID" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i> Remove</button> 
                     </form>
                 </td>
                    
