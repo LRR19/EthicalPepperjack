@@ -30,3 +30,9 @@ th {
 	text-align:center;
 	text-transform: capitalize;
 }
+tr.concern {
+	background-color:rgb(235, 143, 143);
+}
+.table tbody tr.concern:hover td, .table tbody tr.concern:hover th {
+	background-color:rgb(235, 143, 143);
+}
