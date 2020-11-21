@@ -1,9 +1,24 @@
 {% extends 'base.html' %}
 {% block content  %}
+<head>
+<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
 <h2 style="text-align:center">Homepage</h2>
+<br>
 
-<div  style="width:600px;float:right;text-align:left" class="container">
+<!----
+trying to use video as backgroud
+<video autoplay loop muted id="myVideo">
+  <source src="{{ url_for('static', filename='pics/kitchen.mp4') }}" type="video/mp4">
+    Sorry, your browser doesn't support embedded videos.
+</video>
+---->
 
+<img src="{{ url_for('static', filename = 'pics/fridge.gif') }}"> 
+
+
+
+<div style="width:600px; float:right; text-align:left" class="container">
 
   <form class="loginform" method="POST">
     {{ form.csrf_token }}
@@ -28,5 +43,6 @@
   </form>
 
 </div>
-
+</body>
+</html>
 {% endblock %}
