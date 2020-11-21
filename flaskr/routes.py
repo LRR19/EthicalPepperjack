@@ -202,14 +202,17 @@ def recipe_display():
     #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
     
-    #   Select all ingredients in recipes_ingredients table for display
-    query = "SELECT i.id, i.name, i.description, i.origin " \
-            "FROM ingredients AS i INNER JOIN recipes_ingredients " \
-            "ON i.id = recipes_ingredients.ingredient_id " \
-            "WHERE recipes_ingredients.recipe_id = %d;" % recipe_id
+    #   Select all ingredients in recipes_ingredients  and their concerns for display
+    query = "SELECT i.id, i.name, i.description, i.origin, ec.name, ec.description " \
+            "FROM ingredients AS i " \
+            "LEFT JOIN recipes_ingredients AS ri ON i.id = ri.ingredient_id " \
+            "LEFT JOIN ingredients_concerns AS ic ON i.id = ic.ingredient_id " \
+            "LEFT JOIN ethical_concerns AS ec ON ic.concern_id = ec.id " \
+            "WHERE ri.recipe_id = %d;" % recipe_id
 
     #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
+    
     
     #   Pass the search query and the list of ingredients to
     #   the new html for display.

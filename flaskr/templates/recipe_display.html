@@ -14,11 +14,15 @@
         <!--Ingredient array (id,name,description,origin) -->
         {% for ingredient in ingredients %}
         <tbody>
-            <tr>
+            <tr class='{{"concern" if ingredient.5 != None}}'>
                 <th scope="row">{{ingredient.1}}</td>
                 <td>{{ingredient.2}}</td>
                 <td>{{ingredient.3}}</td>
-                <td><a href="/alternatives?recipeID={{recipeID}}&ingredientID={{ingredient.0}}&recipe_name={{name}}"><button type="button" class="btn btn-info btn-lg">Yes</button></a></td>   
+                {% if ingredient.5 != None -%}                
+                <td><a href="/alternatives?recipeID={{recipeID}}&ingredientID={{ingredient.0}}&recipe_name={{name}}"><button type="button" class="btn btn-warning btn-lg">Yes</button></a></td> 
+                {%- else -%}
+                <td><button type="button" class="btn btn-secondary btn-lg"disabled>No Alternatives</button></a></td></td>
+                {%- endif %}  
         </tbody>
         {% endfor %}
     </table>
