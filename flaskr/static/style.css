@@ -37,8 +37,3 @@ tr.concern {
 	background-color:rgb(235, 143, 143);
 }
 
-.carousel-inner > .item >img{
-	min-height : 300px;
-	max-height : 300px;
-	width : 100%;
-  }
