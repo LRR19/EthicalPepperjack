@@ -339,9 +339,25 @@ def add_ingredients():
         return redirect(url_for('recipe_display'))
 
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def homepage():
-    return render_template('homepage.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = execute_query(
+            """SELECT id, username, f_name, l_name, email, password FROM users
+                WHERE username = \'%s\';""" % form.username.data)
+        user_list = list(user)
+        if user_list:
+            if check_password_hash(user_list[0][5], form.password.data):
+                user_obj = User(id=user_list[0][0], username=user_list[0][1], f_name=user_list [0][2], l_name=user_list [0][3],
+                email=user_list[0][4], password=user_list[0][5])
+                login_user(user_obj)
+                return redirect('/profile')
+            else:
+                flash("Password is incorrect")
+        else:
+            flash("Account is not found")
+    return render_template('homepage.html', form=form)
 
 
 @app.route('/faq')
