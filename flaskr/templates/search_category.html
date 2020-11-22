@@ -4,16 +4,15 @@
 
 {% block content %}
 
+   <br>
     <h2 style="text-align:center">Look up an Ethical Concern</h2>
     <br>
 
     <form action="search_category" method="post">
 
         <div class="mx-auto" style="width: 1000px;">
-            <label for="exampleInputEmail1">Enter an Ethical Category</label>
-
             <input type="search" class="form-control" id="search-field"
-                   aria-describedby="searchHelp" name="search_category">
+                   aria-describedby="searchHelp" name="search_category"placeholder="Enter an Ethical Category">
 
             <small id="searchHelp" class="form-text text-muted">By searching a concern, you can find
         alternative & ethical ingredients
@@ -24,8 +23,8 @@
     </form>
     <br>
 
-    <table class="table table-striped table-dark mx-auto" style="width: 1000px;">
-        <thead>
+    <table class="table table-hover" style="width: 1000px;">
+        <thead class="thead-light">
         <tr>
             <th scope="col">Ethical Category</th>
             <th scope="col">Alternative Ingredient(s)</th>

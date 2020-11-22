@@ -1,0 +1,16 @@
+{% extends "login.html" %}
+
+{% block content  %}
+<head>
+<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
+<h2 style="text-align:center">Homepage</h2>
+<br>
+
+<img src="{{ url_for('static', filename = 'pics/fridge.gif') }}"> 
+
+<div style="width:600px; float:right;" class="jinjacontainer">
+{{ super() }}
+</div>
+
+{% endblock %}

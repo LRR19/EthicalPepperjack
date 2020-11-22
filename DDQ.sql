@@ -275,3 +275,17 @@ VALUES
 ('carbon footprint','think about the polar bears'),
 ('pesticides','bees are friends'),
 ('food miles','local is better');
+
+--
+-- Dumping data for table `users_recipes`
+--
+
+INSERT INTO users_recipes
+(user_id, recipe_id)
+VALUES
+(1,1),
+(1,2),
+(1,3),
+(2,1),
+(2,2),
+(2,3);
