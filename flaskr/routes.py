@@ -82,7 +82,7 @@ def logout():
 # Route for guest (restrict saving recipes)
 @app.route('/guest')
 def guest():
-    return render_template('add_ingredient.html')
+    return render_template('search_recipe.html')
 
 
 # Search for an ethical concern and displays alternative ingredients
