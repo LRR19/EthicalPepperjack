@@ -330,7 +330,7 @@ def add_ingredients():
         unit = request.form['unit']
 
         query = """INSERT INTO recipes_ingredients
-                    recipe_id, ingredient_id, quantity, unit)
+                    (recipe_id, ingredient_id, quantity, unit)
                     VALUES (%d,%d,%d,\'%s\');""" \
                 % (recipe_id, ingredient_id, quantity, unit)
 
