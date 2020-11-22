@@ -156,7 +156,7 @@ def add_recipe_to_user_book():
         return redirect(url_for('recipe_book/error.html'))
     else:
         current_user_id = current_user.get_id()
-        recipe_id = int(request.form['recipeID'])
+        recipe_id = int(request.form['recipe_id'])
 
         query_add_to_recipe_book = "INSERT INTO users_recipes " \
                                    "(user_id,recipe_id) VALUES (%d,%d);" \
@@ -170,7 +170,7 @@ def add_recipe_to_user_book():
 @app.route('/delete_recipe_from_user_book', methods=['POST'])
 def delete_recipe_from_user_book():
     current_user_id = current_user.get_id()
-    recipe_id = int(request.form['recipeID'])
+    recipe_id = int(request.form['recipe_id'])
 
     query_remove_from_recipe_book = "DELETE FROM users_recipes " \
                                     "WHERE user_id = %d AND recipe_id = %d;" \
@@ -217,7 +217,7 @@ def recipe_display():
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
     return render_template('recipe_display.html', name=recipe_name,
-                           recipeID=recipe_id, ingredients=ingredient_list)
+                           recipe_id=recipe_id, ingredients=ingredient_list)
 
 
 # Displays a list of all recipes or a specific recipe after searching for one.
@@ -258,7 +258,7 @@ def search_recipe():
 def alternatives():
     if request.method == 'GET':  # Show alternatives
 
-        session['recipe_id_alt'] = int(request.args.get('recipeID'))
+        session['recipe_id_alt'] = int(request.args.get('recipe_id'))
         session['ingredient_id_alt'] = int(request.args.get('ingredient_id'))
         session['recipe_name'] = request.args.get('recipe_name')
 
