@@ -259,7 +259,7 @@ def alternatives():
     if request.method == 'GET':  # Show alternatives
 
         session['recipe_id_alt'] = int(request.args.get('recipeID'))
-        session['ingredient_id_alt'] = int(request.args.get('ingredientID'))
+        session['ingredient_id_alt'] = int(request.args.get('ingredient_id'))
         session['recipe_name'] = request.args.get('recipe_name')
 
         query_name = """ SELECT name, description
