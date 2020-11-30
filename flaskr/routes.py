@@ -317,11 +317,16 @@ def add_ingredients():
 
             ingredients = list(execute_query(query))
 
+            visible_prop = "block" if len(ingredients) == 0 else "none"
+
         else:
 
             ingredients = []
+            visible_prop = "none"
 
-        return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'])
+        
+
+        return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'], visible_prop=visible_prop)
 
     if request.method == 'POST':
         recipe_id = int(session['recipe_id'])
