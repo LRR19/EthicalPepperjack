@@ -321,7 +321,7 @@ def add_ingredients():
 
             ingredients = []
 
-        return render_template('add_ingredient.html', ingredients=ingredients)
+        return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'])
 
     if request.method == 'POST':
         recipe_id = int(session['recipe_id'])
