@@ -64,12 +64,15 @@
         {% endfor %}
          </tbody>
     </table>
-    <h3 style="display:{{ visible_prop }};text-align: center">No ingredients found</h3>
+    <h4 style="display:{{ visible_prop }};text-align: center"class="text-danger">No ingredients found to match the search criteria...</h4>
+    <br>
+    <h6 style="display:{{ visible_prop }};text-align: center" class="text-success">You can add it below, and we will happily review it!</h6>
+    <br>
     <form action="add_ingredients" method="post" style="display: {{ visible_prop }}; width: 30%">
         <input type="text" class="form-control" name="ingredient_name" placeholder="Ingredient Name">
         <textarea rows="5" class="form-control" name="ingredient_desc" placeholder="Description"></textarea>
         <input type="text" class="form-control" name="ingredient_origin" placeholder="Origin">
-        <button type="submit" class="btn btn-primary">Add to recipe & database</button>
+        <button type="submit" class="btn btn-success" name="submit_ingredient">Add to our database</button>
     </form>
     <script src="{{url_for('static', filename='scripts.js')}}"></script>
 
