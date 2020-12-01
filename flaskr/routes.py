@@ -346,11 +346,25 @@ def add_ingredients():
 
         else:
             
+            if request.form['ingredient_name'] == '':
+                flash("Unable to add ingredient without a name!")
+                return redirect(url_for('add_ingredients'))
+
+            if request.form['ingredient_desc'] == '':
+                desc = 'none'
+            else:
+                desc = request.form['ingredient_desc']
+
+            if request.form['ingredient_origin'] == '':
+                origin = 'none'
+            else:
+                origin = request.form['ingredient_origin']
+
             # Add ingredient to database
             query = """INSERT INTO ingredients
                         (name,description,origin)
                         VALUES(\'%s\',\'%s\',\'%s\');""" \
-                        % (request.form['ingredient_name'], request.form['ingredient_desc'], request.form['ingredient_origin'])
+                        % (request.form['ingredient_name'], desc, origin)
 
             execute_query(query)
 
