@@ -302,6 +302,9 @@ def alternatives():
 
 @app.route('/add_ingredients', methods=['GET', 'POST'])
 def add_ingredients():
+
+    print("In here")
+
     if request.method == "GET":
 
         if request.args.get('ingredient_name'):
@@ -317,26 +320,58 @@ def add_ingredients():
 
             ingredients = list(execute_query(query))
 
+            visible_prop = "block" if len(ingredients) == 0 else "none"
+
         else:
 
             ingredients = []
+            visible_prop = "none"
 
-        return render_template('add_ingredient.html', ingredients=ingredients)
+        
+
+        return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'], visible_prop=visible_prop)
 
     if request.method == 'POST':
-        recipe_id = int(session['recipe_id'])
-        ingredient_id = int(request.form['submit_ing_id'])
-        quantity = int(request.form['quantity'])
-        unit = request.form['unit']
 
-        query = """INSERT INTO recipes_ingredients
-                    (recipe_id, ingredient_id, quantity, unit)
-                    VALUES (%d,%d,%d,\'%s\');""" \
-                % (recipe_id, ingredient_id, quantity, unit)
+        if 'submit_ing_id' in request.form: # Adding ingredient to recipe
 
-        execute_query(query)
+            query = """INSERT INTO recipes_ingredients
+                        (recipe_id, ingredient_id, quantity, unit)
+                        VALUES (%d,%d,%d,\'%s\');""" \
+                    % (int(session['recipe_id']), int(request.form['submit_ing_id']), int(request.form['quantity']), request.form['unit'])
 
-        return redirect(url_for('recipe_display'))
+            execute_query(query)
+
+            return redirect(url_for('recipe_display'))
+
+        else:
+            
+            if request.form['ingredient_name'] == '':
+                flash("Unable to add ingredient without a name!")
+                return redirect(url_for('add_ingredients'))
+
+            if request.form['ingredient_desc'] == '':
+                desc = 'none'
+            else:
+                desc = request.form['ingredient_desc']
+
+            if request.form['ingredient_origin'] == '':
+                origin = 'none'
+            else:
+                origin = request.form['ingredient_origin']
+
+            # Add ingredient to database
+            query = """INSERT INTO ingredients
+                        (name,description,origin)
+                        VALUES(\'%s\',\'%s\',\'%s\');""" \
+                        % (request.form['ingredient_name'], desc, origin)
+
+            execute_query(query)
+
+            flash("Thanks! " + request.form['ingredient_name'] + " has been added to the database for review!")
+
+            return redirect(url_for('add_ingredients'))
+        
 
 
 @app.route('/', methods=('GET', 'POST'))
