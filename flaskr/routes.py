@@ -327,8 +327,6 @@ def add_ingredients():
             ingredients = []
             visible_prop = "none"
 
-        
-
         return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'], visible_prop=visible_prop)
 
     if request.method == 'POST':
@@ -372,7 +370,6 @@ def add_ingredients():
 
             return redirect(url_for('add_ingredients'))
         
-
 
 @app.route('/', methods=('GET', 'POST'))
 def homepage():
