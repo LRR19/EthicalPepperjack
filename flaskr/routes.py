@@ -66,8 +66,10 @@ def signup():
 
 
 @app.route('/profile')
-@login_required
 def profile():
+    if not current_user.is_authenticated:
+        return render_template('profile_error.html')
+    ##else we display the current user information
     return render_template('profile.html')
 
 
@@ -181,10 +183,7 @@ def delete_recipe_from_user_book():
     return redirect(url_for('user_recipebook'))
 
 
-# Route for adding recipe
-@app.route('/add_new_recipe')
-def add_new_recipe():
-    return render_template('add_new_recipe.html')
+
 
 
 # Route to handle the display of ingredients after searching for a recipe.
@@ -197,6 +196,7 @@ def recipe_display():
     # Use session cookie if name not in the url. Else, add recipe name to session cookie
     if recipe_name is None:
         recipe_name = session['recipe_name']
+        
     else:
         session['recipe_name'] = recipe_name
 
@@ -207,6 +207,8 @@ def recipe_display():
     recipe_id = result[0][0]
     #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
+    
+   
     
     #   Select all ingredients in recipes_ingredients  and their concerns for display
     query = "SELECT i.id, i.name, i.description, i.origin, ec.name, ec.description " \
@@ -258,6 +260,30 @@ def search_recipe():
             error_message = [("No recipes found, please try again",)]
             return render_template('search_recipe.html',
                                    recipe_list=error_message)
+
+@app.route('/create_recipe',methods=['GET','POST'])
+def create_recipes():
+    if request.method == 'GET':
+        return render_template('add_new_recipe.html')
+    
+    if request.method == 'POST':
+
+        #session['recipe_name'] = request.form['recipe_name']
+
+
+        name = request.form['recipe_name']
+        session['recipe_name'] = name
+        print("name: %s",name)
+        description = request.form['recipe_description']        
+        print("description: %s", description)  
+
+        query = """INSERT INTO recipes (name,description) VALUES (\'%s\',\'%s\');""" % (name,description)
+
+        execute_query(query)        
+
+        return redirect(url_for('recipe_display'))
+
+
 
 
 @app.route('/alternatives', methods=['GET', 'POST'])
