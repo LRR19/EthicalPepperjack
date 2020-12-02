@@ -149,7 +149,20 @@ def user_recipebook():
 
     recipe_list = list(execute_query(query_recipe_book))
 
-    return render_template('recipe_book/user.html', recipes=recipe_list)
+    return render_template('recipe_book/user.html', recipes=recipe_list, delete_possible=True)
+
+
+
+@app.route('/all_recipes')
+def all_recipes():
+    query_recipe_book = "SELECT r.id, r.name, r.description " \
+                        "FROM recipes as r "
+
+    recipe_list = list(execute_query(query_recipe_book))
+
+    return render_template('recipe_book/user.html', recipes=recipe_list, delete_possible=False)
+
+
 
 
 @app.route('/add_recipe_to_user_book', methods=['POST'])
@@ -193,23 +206,30 @@ def recipe_display():
     #   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
+
+    if request.args.get("make_changes") == 'False':
+        allow_recipe_changes = False
+    else:
+        allow_recipe_changes = True
+
+
     # Use session cookie if name not in the url. Else, add recipe name to session cookie
     if recipe_name is None:
         recipe_name = session['recipe_name']
-        
+
     else:
         session['recipe_name'] = recipe_name
 
-    
+
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
     #   Convert result tuple to integer
     recipe_id = result[0][0]
     #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
-    
-   
-    
+
+
+
     #   Select all ingredients in recipes_ingredients  and their concerns for display
     query = "SELECT i.id, i.name, i.description, i.origin, ec.name, ec.description " \
             "FROM ingredients AS i " \
@@ -220,12 +240,12 @@ def recipe_display():
 
     #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
-    
-    
+
+
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
     return render_template('recipe_display.html', name=recipe_name,
-                           recipe_id=recipe_id, ingredients=ingredient_list)
+                           recipe_id=recipe_id, ingredients=ingredient_list, makechanges=allow_recipe_changes)
 
 
 # Displays a list of all recipes or a specific recipe after searching for one.
@@ -265,7 +285,7 @@ def search_recipe():
 def create_recipes():
     if request.method == 'GET':
         return render_template('add_new_recipe.html')
-    
+
     if request.method == 'POST':
 
         #session['recipe_name'] = request.form['recipe_name']
@@ -274,12 +294,12 @@ def create_recipes():
         name = request.form['recipe_name']
         session['recipe_name'] = name
         print("name: %s",name)
-        description = request.form['recipe_description']        
-        print("description: %s", description)  
+        description = request.form['recipe_description']
+        print("description: %s", description)
 
         query = """INSERT INTO recipes (name,description) VALUES (\'%s\',\'%s\');""" % (name,description)
 
-        execute_query(query)        
+        execute_query(query)
 
         return redirect(url_for('recipe_display'))
 
@@ -375,7 +395,7 @@ def add_ingredients():
             return redirect(url_for('recipe_display'))
 
         else:
-            
+
             if request.form['ingredient_name'] == '':
                 flash("Unable to add ingredient without a name!")
                 return redirect(url_for('add_ingredients'))
@@ -401,7 +421,7 @@ def add_ingredients():
             flash("Thanks! " + request.form['ingredient_name'] + " has been added to the database for review!")
 
             return redirect(url_for('add_ingredients'))
-        
+
 
 @app.route('/', methods=('GET', 'POST'))
 def homepage():
