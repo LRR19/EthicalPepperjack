@@ -255,6 +255,19 @@ def search_recipe():
             return render_template('search_recipe.html',
                                    recipe_list=error_message)
 
+@app.route('/create_recipe',methods=['POST'])
+def create_recipes():
+    session['recipe_name'] = request.form['recipe_name']
+    
+
+    query = "INSERT INTO recipes (name) VALUE %s;" % session['recipe_name']
+
+    execute_query(query)
+
+    return render_template('add_ingredient.html',name=session['recipe_name'])
+
+
+
 
 @app.route('/alternatives', methods=['GET', 'POST'])
 def alternatives():
