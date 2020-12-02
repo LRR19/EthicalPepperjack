@@ -9,62 +9,53 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/d9bfb7c52b.js"></script>
 </head>
-<body>
-<h1>{% block h1 %}{% endblock %}</h1>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Ethical Eating</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav justify-content-center">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Login
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/login">Sign In</a>
-                    <a class="dropdown-item" href="/profile">My Profile</a>
-                    <a class="dropdown-item" href="/signup">Sign Up</a>
-                    <a class="dropdown-item" href="/logout">Logout</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Recipes
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">All Recipes</a>
-                    <a class="dropdown-item" href="/user_recipebook">Saved Recipes</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/add_ingredients">Ingredients</a>
-                    <a class="dropdown-item" href="/search_category">Ethical Concerns</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/faq">FAQ</a>
-            </li>
-        </ul>
-    </div>
-    <form class="form-inline" action="search_recipe" method="post">
-        <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search"
-               name="search_recipe_name">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-    </form>
-</nav>
+
+	<body>
+		<h1>{% block h1 %}{% endblock %}</h1>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  		<a class="navbar-brand" href="/">Ethical Eating</a>
+  		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    		<span class="navbar-toggler-icon"></span>
+  		</button>
+  		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    		<ul class="navbar-nav justify-content-center">
+      		<li class="nav-item active">
+        		<a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item dropdown">
+        		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    				Login
+        		</a>
+        		<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          		<a class="dropdown-item" href="/login">Sign In</a>
+							<a class="dropdown-item" href="/profile">My Profile</a>
+          		<a class="dropdown-item" href="/signup">Sign Up</a>
+          		<a class="dropdown-item" href="/logout">Logout</a>
+        		</div>
+      		</li>
+					<li class="nav-item dropdown">
+        		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          	Recipes
+        		</a>
+        		<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          		<a class="dropdown-item" href="#">All Recipes</a>
+          		<a class="dropdown-item" href="/user_recipebook">Saved Recipes</a>
+				      <a class="dropdown-item" href="/add_new_recipe">Create New Recipe</a>
+				</div>
+      		</li>
+      		<li class="nav-item">
+        		<a class="nav-link" href="/add_ingredients">Ingredients</a>
+      		</li>
+      		<li class="nav-item">
+        		<a class="nav-link" href="/faq">FAQ</a>
+      		</li>
+    		</ul>
+  		</div>
+			<form class="form-inline" action="search_recipe" method="post">
+    		<input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search" name="search_recipe_name">
+    		<button class="btn btn-outline-primary" type="submit">Search</button>
+  		</form>
+		</nav>
 
 
 <div>
