@@ -66,8 +66,10 @@ def signup():
 
 
 @app.route('/profile')
-@login_required
 def profile():
+    if not current_user.is_authenticated:
+        return render_template('profile_error.html')
+    ##else we display the current user information
     return render_template('profile.html')
 
 
