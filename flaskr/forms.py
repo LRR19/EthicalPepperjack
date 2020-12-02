@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email
 
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[
         DataRequired()])
@@ -9,6 +10,7 @@ class LoginForm(FlaskForm):
         DataRequired(),
         Length(min=8, message="Length must be at least 8 characters")])
     submit = SubmitField('Submit')
+
 
 class SignUpForm(FlaskForm):
     f_name = StringField('First Name', validators=[

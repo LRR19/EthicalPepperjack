@@ -2,6 +2,7 @@ from flask_login import UserMixin
 from flaskr import login_manager
 from .db_connect import execute_query
 
+
 # User Model for Flash-Login
 class User(UserMixin):
     # Constructor for User Model
