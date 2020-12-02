@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content  %}
+<br>
+<h2 style="text-align:center">Add A New Recipe</h2>
+<br>
+<form>
+
+    <div class="mx-auto" style="width: 1000px;">
+        
+        <input type="search" class="form-control" id="search-field"
+               aria-describedby="searchHelp" name="ingredient_name" placeholder="Add an Ingredient">
+        <button type="submit" class="btn btn-primary">Add Ingredient</button>
+    </div>
+</form>
+<br>
+{% endblock %}
