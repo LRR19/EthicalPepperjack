@@ -183,6 +183,12 @@ def delete_recipe_from_user_book():
     return redirect(url_for('user_recipebook'))
 
 
+# Route for adding recipe
+@app.route('/add_new_recipe')
+def add_new_recipe():
+    return render_template('add_new_recipe.html')
+
+
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_display')
@@ -342,8 +348,6 @@ def add_ingredients():
             ingredients = []
             visible_prop = "none"
 
-        
-
         return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'], visible_prop=visible_prop)
 
     if request.method == 'POST':
@@ -387,7 +391,6 @@ def add_ingredients():
 
             return redirect(url_for('add_ingredients'))
         
-
 
 @app.route('/', methods=('GET', 'POST'))
 def homepage():
