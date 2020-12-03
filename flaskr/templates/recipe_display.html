@@ -33,14 +33,18 @@
             <div class="col-md">
                 <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a>
             </div>
-            {% endif %}
+            {% else %}
 
+
+            {% if current_user.is_authenticated %}
             <div class="col-md">
                 <form action = "/add_recipe_to_user_book" method="POST">
                     <button class="btn btn-success"id="recipe_id" name="recipe_id" value="{{recipe_id}}">Save Recipe</button>
                 </form>
             </div>
+            {% endif %}
 
+            {% endif %}
         </div>
     </div>
 

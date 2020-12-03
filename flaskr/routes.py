@@ -177,9 +177,20 @@ def add_recipe_to_user_book():
                                    "(user_id,recipe_id) VALUES (%d,%d);" \
                                    % (current_user_id, recipe_id)
 
-        execute_query(query_add_to_recipe_book)
+        already_added_query = "SELECT * FROM users_recipes WHERE user_id=%d AND recipe_id=%d;" \
+                              % (current_user_id, recipe_id)
+
+        already_added = list(execute_query(already_added_query))
+
+        if already_added:
+            flash("The recipe has already been saved to your recipe book.")
+        else:
+            execute_query(query_add_to_recipe_book)
 
         return redirect(url_for('user_recipebook'))
+
+
+
 
 
 @app.route('/delete_recipe_from_user_book', methods=['POST'])
