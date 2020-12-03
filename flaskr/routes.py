@@ -11,6 +11,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Route to the login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = LoginForm()
     if form.validate_on_submit():
         user = execute_query(
@@ -33,6 +37,10 @@ def login():
 # Route to the signup page
 @app.route('/signup', methods=('GET', 'POST'))
 def signup():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = SignUpForm()
     if form.validate_on_submit():
         user = execute_query(
@@ -436,6 +444,10 @@ def add_ingredients():
 
 @app.route('/', methods=('GET', 'POST'))
 def homepage():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = LoginForm()
     if form.validate_on_submit():
         user = execute_query(
