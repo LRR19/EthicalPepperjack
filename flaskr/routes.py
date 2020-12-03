@@ -11,6 +11,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Route to the login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = LoginForm()
     if form.validate_on_submit():
         user = execute_query(
@@ -33,6 +37,10 @@ def login():
 # Route to the signup page
 @app.route('/signup', methods=('GET', 'POST'))
 def signup():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = SignUpForm()
     if form.validate_on_submit():
         user = execute_query(
@@ -66,8 +74,10 @@ def signup():
 
 
 @app.route('/profile')
-@login_required
 def profile():
+    if not current_user.is_authenticated:
+        return render_template('profile_error.html')
+    ##else we display the current user information
     return render_template('profile.html')
 
 
@@ -147,7 +157,20 @@ def user_recipebook():
 
     recipe_list = list(execute_query(query_recipe_book))
 
-    return render_template('recipe_book/user.html', recipes=recipe_list)
+    return render_template('recipe_book/user.html', recipes=recipe_list, delete_possible=True)
+
+
+
+@app.route('/all_recipes')
+def all_recipes():
+    query_recipe_book = "SELECT r.id, r.name, r.description " \
+                        "FROM recipes as r "
+
+    recipe_list = list(execute_query(query_recipe_book))
+
+    return render_template('recipe_book/user.html', recipes=recipe_list, delete_possible=False)
+
+
 
 
 @app.route('/add_recipe_to_user_book', methods=['POST'])
@@ -162,9 +185,20 @@ def add_recipe_to_user_book():
                                    "(user_id,recipe_id) VALUES (%d,%d);" \
                                    % (current_user_id, recipe_id)
 
-        execute_query(query_add_to_recipe_book)
+        already_added_query = "SELECT * FROM users_recipes WHERE user_id=%d AND recipe_id=%d;" \
+                              % (current_user_id, recipe_id)
+
+        already_added = list(execute_query(already_added_query))
+
+        if already_added:
+            flash("The recipe has already been saved to your recipe book.")
+        else:
+            execute_query(query_add_to_recipe_book)
 
         return redirect(url_for('user_recipebook'))
+
+
+
 
 
 @app.route('/delete_recipe_from_user_book', methods=['POST'])
@@ -181,6 +215,9 @@ def delete_recipe_from_user_book():
     return redirect(url_for('user_recipebook'))
 
 
+
+
+
 # Route to handle the display of ingredients after searching for a recipe.
 # Recipe name is the input and will return list of all ingredients
 @app.route('/recipe_display')
@@ -188,20 +225,30 @@ def recipe_display():
     #   Get the recipe name from the search bar
     recipe_name = request.args.get("recipe_name")
 
+
+    if request.args.get("make_changes") == 'False':
+        allow_recipe_changes = False
+    else:
+        allow_recipe_changes = True
+
+
     # Use session cookie if name not in the url. Else, add recipe name to session cookie
     if recipe_name is None:
         recipe_name = session['recipe_name']
+
     else:
         session['recipe_name'] = recipe_name
 
-    
+
     id_query = "SELECT id FROM recipes WHERE name =\'%s\';" % recipe_name
     result = execute_query(id_query)
     #   Convert result tuple to integer
     recipe_id = result[0][0]
     #   Add recipe id to session cookie
     session['recipe_id'] = recipe_id
-    
+
+
+
     #   Select all ingredients in recipes_ingredients  and their concerns for display
     query = "SELECT i.id, i.name, i.description, i.origin, ec.name, ec.description " \
             "FROM ingredients AS i " \
@@ -212,12 +259,12 @@ def recipe_display():
 
     #   Convert result tuple to list
     ingredient_list = list(execute_query(query))
-    
-    
+
+
     #   Pass the search query and the list of ingredients to
     #   the new html for display.
     return render_template('recipe_display.html', name=recipe_name,
-                           recipe_id=recipe_id, ingredients=ingredient_list)
+                           recipe_id=recipe_id, ingredients=ingredient_list, makechanges=allow_recipe_changes)
 
 
 # Displays a list of all recipes or a specific recipe after searching for one.
@@ -252,6 +299,30 @@ def search_recipe():
             error_message = [("No recipes found, please try again",)]
             return render_template('search_recipe.html',
                                    recipe_list=error_message)
+
+@app.route('/create_recipe',methods=['GET','POST'])
+def create_recipes():
+    if request.method == 'GET':
+        return render_template('add_new_recipe.html')
+
+    if request.method == 'POST':
+
+        #session['recipe_name'] = request.form['recipe_name']
+
+
+        name = request.form['recipe_name']
+        session['recipe_name'] = name
+        print("name: %s",name)
+        description = request.form['recipe_description']
+        print("description: %s", description)
+
+        query = """INSERT INTO recipes (name,description) VALUES (\'%s\',\'%s\');""" % (name,description)
+
+        execute_query(query)
+
+        return redirect(url_for('recipe_display'))
+
+
 
 
 @app.route('/alternatives', methods=['GET', 'POST'])
@@ -302,6 +373,9 @@ def alternatives():
 
 @app.route('/add_ingredients', methods=['GET', 'POST'])
 def add_ingredients():
+
+    print("In here")
+
     if request.method == "GET":
 
         if request.args.get('ingredient_name'):
@@ -317,30 +391,63 @@ def add_ingredients():
 
             ingredients = list(execute_query(query))
 
+            visible_prop = "block" if len(ingredients) == 0 else "none"
+
         else:
 
             ingredients = []
+            visible_prop = "none"
 
-        return render_template('add_ingredient.html', ingredients=ingredients)
+        return render_template('add_ingredient.html', ingredients=ingredients, recipe=session['recipe_name'], visible_prop=visible_prop)
 
     if request.method == 'POST':
-        recipe_id = int(session['recipe_id'])
-        ingredient_id = int(request.form['submit_ing_id'])
-        quantity = int(request.form['quantity'])
-        unit = request.form['unit']
 
-        query = """INSERT INTO recipes_ingredients
-                    (recipe_id, ingredient_id, quantity, unit)
-                    VALUES (%d,%d,%d,\'%s\');""" \
-                % (recipe_id, ingredient_id, quantity, unit)
+        if 'submit_ing_id' in request.form: # Adding ingredient to recipe
 
-        execute_query(query)
+            query = """INSERT INTO recipes_ingredients
+                        (recipe_id, ingredient_id, quantity, unit)
+                        VALUES (%d,%d,%d,\'%s\');""" \
+                    % (int(session['recipe_id']), int(request.form['submit_ing_id']), int(request.form['quantity']), request.form['unit'])
 
-        return redirect(url_for('recipe_display'))
+            execute_query(query)
+
+            return redirect(url_for('recipe_display'))
+
+        else:
+
+            if request.form['ingredient_name'] == '':
+                flash("Unable to add ingredient without a name!")
+                return redirect(url_for('add_ingredients'))
+
+            if request.form['ingredient_desc'] == '':
+                desc = 'none'
+            else:
+                desc = request.form['ingredient_desc']
+
+            if request.form['ingredient_origin'] == '':
+                origin = 'none'
+            else:
+                origin = request.form['ingredient_origin']
+
+            # Add ingredient to database
+            query = """INSERT INTO ingredients
+                        (name,description,origin)
+                        VALUES(\'%s\',\'%s\',\'%s\');""" \
+                        % (request.form['ingredient_name'], desc, origin)
+
+            execute_query(query)
+
+            flash("Thanks! " + request.form['ingredient_name'] + " has been added to the database for review!")
+
+            return redirect(url_for('add_ingredients'))
 
 
 @app.route('/', methods=('GET', 'POST'))
 def homepage():
+    if current_user.is_authenticated:
+        flash('Account is already logged in.')
+        return render_template('profile.html')
+
     form = LoginForm()
     if form.validate_on_submit():
         user = execute_query(

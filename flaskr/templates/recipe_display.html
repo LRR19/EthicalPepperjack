@@ -18,32 +18,41 @@
                 <th scope="row">{{ingredient.1}}</td>
                 <td>{{ingredient.2}}</td>
                 <td>{{ingredient.3}}</td>
-                {% if ingredient.5 != None -%}                
-                <td><a href="/alternatives?recipe_id={{recipe_id}}&ingredient_id={{ingredient.0}}&recipe_name={{name}}"><button type="button" class="btn btn-warning btn-lg">Yes</button></a></td> 
+                {% if ingredient.5 != None -%}
+                <td><a href="/alternatives?recipe_id={{recipe_id}}&ingredient_id={{ingredient.0}}&recipe_name={{name}}"><button type="button" class="btn btn-warning btn-lg">Yes</button></a></td>
                 {%- else -%}
                 <td><button type="button" class="btn btn-secondary btn-lg"disabled>No Alternatives</button></a></td></td>
-                {%- endif %}  
+                {%- endif %}
         </tbody>
         {% endfor %}
     </table>
     <div class="container-fluid">
         <div class="row">
+
+            {% if makechanges %}
             <div class="col-md">
-                <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a> 
+                <a href="/add_ingredients"><button type="button" class="btn btn-success">Add Ingredient(+)</button></a>
             </div>
+            {% else %}
+
+
+            {% if current_user.is_authenticated %}
             <div class="col-md">
                 <form action = "/add_recipe_to_user_book" method="POST">
-                    <button class="btn btn-success"id="recipe_id" name="recipe_id" value="{{recipe_id}}">Save Recipe</button> 
+                    <button class="btn btn-success"id="recipe_id" name="recipe_id" value="{{recipe_id}}">Save Recipe</button>
                 </form>
             </div>
+            {% endif %}
+
+            {% endif %}
         </div>
     </div>
-       
- 
 
 
 
-    
+
+
+
 
 </div>
 

@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 {% block content  %}
 <div class="container-fluid">
+  {% if current_user.is_authenticated %}
     <h1>Welcome, {{current_user.username}}</h1>
+  {% else %}
+    <h1>Welcome, Guest</h1>
+  {% endif %}
+
+
+
     <table class= "table table-hover">
         <thead class="thead-light">
             <tr>
@@ -9,7 +16,9 @@
                 <td scopt="col-lg-12">Description</td>
                 <td scope="col-lg-12">Recipe Page</td>
                 <td scope="col-lg-12">Share</td>
-                <td scope="col-lg-12">Remove Recipe</td>
+                {% if delete_possible %}
+                  <td scope="col-lg-12">Remove Recipe</td>
+                {% endif %}
             </tr>
         </thead>
         <!--Recipe[id,name,description]-->
@@ -19,7 +28,12 @@
                 <th scope="row">{{recipe.1}}</th>
                 <td>{{recipe.2}}</td>
                 <td>
+                    {% if delete_possible %}
                     <a href="/recipe_display?recipe_name={{recipe.1}}"><button class="btn btn-info btn-md"><i class="fa fa-external-link fa-lg"></i> Go To Recipe</button></a>
+                    {% else %}
+                    <a href="/recipe_display?recipe_name={{recipe.1}}&make_changes=False"><button class="btn btn-info btn-md"><i class="fa fa-external-link fa-lg"></i> Go To Recipe</button></a>
+                    {% endif %}
+
                 </td>
                 <td>
                     <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#shareModal"> <i class="fa fa-share-alt fa-lg"></i> Share</button>
@@ -52,10 +66,10 @@
                                             <div class="col">
                                                 <span>
                                                     <i class="fa fa-link fa-lg"></i>
-                                                </span> 
+                                                </span>
                                             </div>
                                         </div>
-                                    </div>                                                               
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -64,12 +78,13 @@
                         </div>
                     </div>
                 </td>
+                {% if delete_possible %}
                 <td>
                     <form action = "/delete_recipe_from_user_book" method="POST">
-                        <button class="btn btn-info btn-md"id="recipe_id" name="recipe_id" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i> Remove</button> 
+                        <button class="btn btn-info btn-md"id="recipe_id" name="recipe_id" value="{{recipe.0}}"><i class="fa fa-minus-circle fa-lg"></i> Remove</button>
                     </form>
                 </td>
-                   
+                {% endif %}
             </tr>
         </tbody>
         {% endfor %}
